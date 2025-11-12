@@ -1,18 +1,14 @@
 import * as React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
 import {
   Button,
   Masthead,
   MastheadBrand,
   MastheadContent,
   MastheadMain,
-  MastheadToggle,
   Nav,
   NavItem,
   NavList,
   Page,
-  PageSidebar,
-  PageSidebarBody,
   SkipToContent,
   Toolbar,
   ToolbarContent,
@@ -24,45 +20,16 @@ import {
   DropdownList,
   MenuToggle,
 } from '@patternfly/react-core';
-import { IAppRoute, routes } from '@app/routes';
-import { BarsIcon, BellIcon, QuestionCircleIcon, CogIcon, ThIcon } from '@patternfly/react-icons';
+import { BellIcon, QuestionCircleIcon, CogIcon, ThIcon } from '@patternfly/react-icons';
 
 interface IAppLayout {
   children: React.ReactNode;
 }
 
 const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
-  const [isHelpMenuOpen, setIsHelpMenuOpen] = React.useState(false);
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
-
-  const location = useLocation();
-
-  const renderNavItem = (route: IAppRoute, index: number) => (
-    <NavItem key={`${route.label}-${index}`} id={`${route.label}-${index}`} isActive={route.path === location.pathname}>
-      <NavLink to={route.path}>
-        {route.label}
-      </NavLink>
-    </NavItem>
-  );
-
-  const Navigation = (
-    <Nav id="nav-primary-simple">
-      <NavList id="nav-list-simple">
-        {routes
-          .filter((route): route is IAppRoute => 'path' in route && route.label !== undefined)
-          .map((route, idx) => renderNavItem(route, idx))}
-      </NavList>
-    </Nav>
-  );
-
-  const Sidebar = (
-    <PageSidebar>
-      <PageSidebarBody>{Navigation}</PageSidebarBody>
-    </PageSidebar>
-  );
 
   const userMenuItems = (
     <>
@@ -87,14 +54,6 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
 
   const masthead = (
     <Masthead>
-      <MastheadToggle>
-        <Button
-          icon={<BarsIcon />}
-          variant="plain"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          aria-label="Global navigation"
-        />
-      </MastheadToggle>
       <MastheadMain>
         <MastheadBrand>
           <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>🐦</span>
@@ -200,7 +159,6 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     <Page
       mainContainerId={pageId}
       masthead={masthead}
-      sidebar={sidebarOpen && Sidebar}
       skipToContent={PageSkipToContent}
     >
       {children}
