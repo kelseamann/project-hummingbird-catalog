@@ -25,8 +25,8 @@ import {
   ToolbarGroup,
   MenuToggle,
   Pagination,
-  Chip,
-  ChipGroup,
+  Label,
+  LabelGroup,
   Dropdown,
   DropdownList,
   DropdownItem,
@@ -36,7 +36,6 @@ import {
   ClockIcon,
   ThIcon,
   ListIcon,
-  TimesIcon,
 } from '@patternfly/react-icons';
 
 interface SoftwareItem {
@@ -131,21 +130,21 @@ const Catalog: React.FunctionComponent = () => {
     'ATS',
   ];
 
-  const handleTypeChange = (checked: boolean, event: React.FormEvent<HTMLInputElement>) => {
+  const handleTypeChange = (event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
     const value = event.currentTarget.value;
     setSelectedType(
       checked ? [...selectedType, value] : selectedType.filter((item) => item !== value)
     );
   };
 
-  const handleDeploymentChange = (checked: boolean, event: React.FormEvent<HTMLInputElement>) => {
+  const handleDeploymentChange = (event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
     const value = event.currentTarget.value;
     setSelectedDeployment(
       checked ? [...selectedDeployment, value] : selectedDeployment.filter((item) => item !== value)
     );
   };
 
-  const handleProviderChange = (checked: boolean, event: React.FormEvent<HTMLInputElement>) => {
+  const handleProviderChange = (event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
     const value = event.currentTarget.value;
     setSelectedProviders(
       checked ? [...selectedProviders, value] : selectedProviders.filter((item) => item !== value)
@@ -233,7 +232,7 @@ const Catalog: React.FunctionComponent = () => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
+      <PageSection variant={PageSectionVariants.default}>
         <Split>
           <SplitItem>
             <Title headingLevel="h1" size="2xl">
@@ -250,18 +249,17 @@ const Catalog: React.FunctionComponent = () => {
             </SplitItem>
             <SplitItem isFilled />
             <SplitItem>
-              <ChipGroup>
+              <LabelGroup>
                 {activeFilters.map((filter) => (
-                  <Chip
+                  <Label
                     key={filter}
-                    onClick={() => removeFilter(filter)}
+                    onClose={() => removeFilter(filter)}
                     closeBtnAriaLabel={`Remove ${filter}`}
                   >
                     {filter}
-                    <TimesIcon />
-                  </Chip>
+                  </Label>
                 ))}
-              </ChipGroup>
+              </LabelGroup>
               {activeFilters.length > 0 && (
                 <Button variant="link" isInline onClick={clearFilters} style={{ marginLeft: '1rem' }}>
                   Clear filters
@@ -290,7 +288,7 @@ const Catalog: React.FunctionComponent = () => {
                 />
               </ToolbarItem>
             </ToolbarGroup>
-            <ToolbarItem alignment={{ default: 'alignRight' }}>
+            <ToolbarItem>
               <Dropdown
                 isOpen={isSortOpen}
                 onSelect={() => setIsSortOpen(false)}
@@ -327,7 +325,7 @@ const Catalog: React.FunctionComponent = () => {
                 </DropdownList>
               </Dropdown>
             </ToolbarItem>
-            <ToolbarItem alignment={{ default: 'alignRight' }}>
+            <ToolbarItem>
               <Pagination
                 itemCount={totalResults}
                 page={currentPage}
@@ -355,7 +353,7 @@ const Catalog: React.FunctionComponent = () => {
             <Grid hasGutter>
               {displayedSoftware.map((item) => (
                 <GridItem key={item.id} span={viewMode === 'grid' ? 6 : 12}>
-                  <Card isHoverable>
+                  <Card>
                     <CardHeader>
                       <Split>
                         <SplitItem>

@@ -25,7 +25,7 @@ import {
   MenuToggle,
 } from '@patternfly/react-core';
 import { IAppRoute, routes } from '@app/routes';
-import { BarsIcon, BellIcon, QuestionCircleIcon, CogIcon, UserIcon, ThIcon } from '@patternfly/react-icons';
+import { BarsIcon, BellIcon, QuestionCircleIcon, CogIcon, ThIcon } from '@patternfly/react-icons';
 
 interface IAppLayout {
   children: React.ReactNode;
@@ -51,9 +51,9 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const Navigation = (
     <Nav id="nav-primary-simple">
       <NavList id="nav-list-simple">
-        {routes.map(
-          (route, idx) => route.label && renderNavItem(route, idx),
-        )}
+        {routes
+          .filter((route): route is IAppRoute => 'path' in route && route.label !== undefined)
+          .map((route, idx) => renderNavItem(route, idx))}
       </NavList>
     </Nav>
   );
