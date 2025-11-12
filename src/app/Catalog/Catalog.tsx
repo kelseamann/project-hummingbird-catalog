@@ -51,7 +51,7 @@ interface SoftwareItem {
 const mockSoftware: SoftwareItem[] = [
   {
     id: '1',
-    name: 'ScaleOps Platform',
+    name: 'hummingbird/image',
     description: 'All-in-one resource management and optimization platform for Kubernetes',
     logo: '🟣',
     tags: ['Containerized application', 'DevOps'],
@@ -60,7 +60,7 @@ const mockSoftware: SoftwareItem[] = [
   },
   {
     id: '2',
-    name: 'LINSTOR',
+    name: 'hummingbird/image',
     description: 'LINSTOR® is open-source software designed to manage block storage devices for large Linux server clusters.',
     logo: '🟠',
     tags: ['Containerized application', 'Storage'],
@@ -69,7 +69,7 @@ const mockSoftware: SoftwareItem[] = [
   },
   {
     id: '3',
-    name: 'OpenShift Windows Machine Config Operator',
+    name: 'hummingbird/image',
     description: 'Windows Machine Config Operator is an operator providing the ability to run Windows compute nodes in an OpenShift Container Platform cluster.',
     logo: '🔴',
     tags: ['Containerized application', 'OS & platforms'],
@@ -78,7 +78,7 @@ const mockSoftware: SoftwareItem[] = [
   },
   {
     id: '4',
-    name: 'Prisma Cloud Enterprise Edition',
+    name: 'hummingbird/image',
     description: 'Cloud Native Application Protection Platform by Palo Alto Networks',
     logo: '🔵',
     tags: ['Containerized application', 'Security'],
@@ -87,7 +87,7 @@ const mockSoftware: SoftwareItem[] = [
   },
   {
     id: '5',
-    name: 'Kubernetes Operator Framework',
+    name: 'hummingbird/image',
     description: 'A framework for building Kubernetes operators',
     logo: '⚪',
     tags: ['Containerized application', 'DevOps'],
@@ -96,7 +96,7 @@ const mockSoftware: SoftwareItem[] = [
   },
   {
     id: '6',
-    name: 'Prometheus Monitoring',
+    name: 'hummingbird/image',
     description: 'Open-source systems monitoring and alerting toolkit',
     logo: '🔴',
     tags: ['Containerized application', 'Monitoring'],
@@ -106,10 +106,18 @@ const mockSoftware: SoftwareItem[] = [
 ];
 
 const Catalog: React.FunctionComponent = () => {
-  const [selectedType, setSelectedType] = React.useState<string[]>([]);
+  const [selectedType, setSelectedType] = React.useState<string[]>(['Containerized application']);
   const [selectedDeployment, setSelectedDeployment] = React.useState<string[]>([]);
   const [providerSearch, setProviderSearch] = React.useState('');
   const [selectedProviders, setSelectedProviders] = React.useState<string[]>([]);
+  const [categorySearch, setCategorySearch] = React.useState('');
+  const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
+  const [selectedCompatibleWith, setSelectedCompatibleWith] = React.useState<string[]>([]);
+  const [selectedPlatforms, setSelectedPlatforms] = React.useState<string[]>([]);
+  const [selectedCertificationLevels, setSelectedCertificationLevels] = React.useState<string[]>([]);
+  const [selectedInfrastructureFeatures, setSelectedInfrastructureFeatures] = React.useState<string[]>([]);
+  const [certifiedForSearch, setCertifiedForSearch] = React.useState('');
+  const [selectedCertifiedFor, setSelectedCertifiedFor] = React.useState<string[]>([]);
   const [viewMode, setViewMode] = React.useState<'list' | 'grid'>('list');
   const [sortBy, setSortBy] = React.useState('relevance');
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -128,6 +136,45 @@ const Catalog: React.FunctionComponent = () => {
     'AI EdgeLabs',
     'AMDOCS',
     'ATS',
+  ];
+  const categoryOptions = [
+    'AI',
+    'Analytics',
+    'App dev',
+    'App modernization',
+    'Automation',
+    'Backup & Recovery',
+    'Cloud',
+    'Compute',
+  ];
+  const compatibleWithOptions = [
+    'Red Hat OpenShift AI',
+    'Red Hat OpenShift Virtualization',
+  ];
+  const platformOptions = [
+    'Red Hat Enterprise Linux',
+    'Red Hat OpenShift',
+    'Red Hat OpenStack Platform',
+  ];
+  const certificationLevelOptions = [
+    'Certified by Red Hat',
+    'Certified by Red Hat and Partner Validated',
+  ];
+  const infrastructureFeaturesOptions = [
+    'Cloud-native Network Function (CNF)',
+    'Container Network Interface (CNI)',
+    'Container Storage Interface (CSI)',
+    'OpenShift Virtualization',
+  ];
+  const certifiedForOptions = [
+    'Azure Red Hat OpenShift 4',
+    'Red Hat Enterprise Linux 9',
+    'Red Hat Enterprise Linux 8',
+    'Red Hat Enterprise Linux 7',
+    'Red Hat Enterprise Linux 6',
+    'Red Hat Enterprise Linux 5',
+    'Red Hat Gluster Storage 3',
+    'Red Hat OpenShift Container Platform 4',
   ];
 
   const handleTypeChange = (event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
@@ -151,6 +198,48 @@ const Catalog: React.FunctionComponent = () => {
     );
   };
 
+  const handleCategoryChange = (event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
+    const value = event.currentTarget.value;
+    setSelectedCategories(
+      checked ? [...selectedCategories, value] : selectedCategories.filter((item) => item !== value)
+    );
+  };
+
+  const handleCompatibleWithChange = (event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
+    const value = event.currentTarget.value;
+    setSelectedCompatibleWith(
+      checked ? [...selectedCompatibleWith, value] : selectedCompatibleWith.filter((item) => item !== value)
+    );
+  };
+
+  const handlePlatformChange = (event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
+    const value = event.currentTarget.value;
+    setSelectedPlatforms(
+      checked ? [...selectedPlatforms, value] : selectedPlatforms.filter((item) => item !== value)
+    );
+  };
+
+  const handleCertificationLevelChange = (event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
+    const value = event.currentTarget.value;
+    setSelectedCertificationLevels(
+      checked ? [...selectedCertificationLevels, value] : selectedCertificationLevels.filter((item) => item !== value)
+    );
+  };
+
+  const handleInfrastructureFeaturesChange = (event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
+    const value = event.currentTarget.value;
+    setSelectedInfrastructureFeatures(
+      checked ? [...selectedInfrastructureFeatures, value] : selectedInfrastructureFeatures.filter((item) => item !== value)
+    );
+  };
+
+  const handleCertifiedForChange = (event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
+    const value = event.currentTarget.value;
+    setSelectedCertifiedFor(
+      checked ? [...selectedCertifiedFor, value] : selectedCertifiedFor.filter((item) => item !== value)
+    );
+  };
+
   const removeFilter = (filter: string) => {
     setActiveFilters(activeFilters.filter((f) => f !== filter));
   };
@@ -160,6 +249,12 @@ const Catalog: React.FunctionComponent = () => {
     setSelectedType([]);
     setSelectedDeployment([]);
     setSelectedProviders([]);
+    setSelectedCategories([]);
+    setSelectedCompatibleWith([]);
+    setSelectedPlatforms([]);
+    setSelectedCertificationLevels([]);
+    setSelectedInfrastructureFeatures([]);
+    setSelectedCertifiedFor([]);
   };
 
   const totalResults = mockSoftware.length;
@@ -207,8 +302,7 @@ const Catalog: React.FunctionComponent = () => {
           value={providerSearch}
           type="text"
           onChange={(_, value) => setProviderSearch(value)}
-          placeholder="Q Search Provider"
-          style={{ marginBottom: '1rem' }}
+          placeholder="🔍 Search Provider"
         />
         {providerOptions
           .filter((p) => p.toLowerCase().includes(providerSearch.toLowerCase()))
@@ -220,6 +314,128 @@ const Catalog: React.FunctionComponent = () => {
               isChecked={selectedProviders.includes(option)}
               onChange={handleProviderChange}
               id={`provider-${option}`}
+              style={{ marginBottom: '0.5rem' }}
+            />
+          ))}
+        <Button variant="link" isInline style={{ marginTop: '0.5rem' }}>
+          See more
+        </Button>
+
+        <Title headingLevel="h3" size="md" style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+          Category
+        </Title>
+        <TextInput
+          value={categorySearch}
+          type="text"
+          onChange={(_, value) => setCategorySearch(value)}
+          placeholder="🔍 Search Category"
+        />
+        {categoryOptions
+          .filter((c) => c.toLowerCase().includes(categorySearch.toLowerCase()))
+          .map((option) => (
+            <Checkbox
+              key={option}
+              label={option}
+              value={option}
+              isChecked={selectedCategories.includes(option)}
+              onChange={handleCategoryChange}
+              id={`category-${option}`}
+              style={{ marginBottom: '0.5rem' }}
+            />
+          ))}
+        <Button variant="link" isInline style={{ marginTop: '0.5rem' }}>
+          See more
+        </Button>
+
+        <Title headingLevel="h3" size="md" style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+          Compatible with
+        </Title>
+        {selectedCompatibleWith.length > 0 && (
+          <Button
+            variant="link"
+            isInline
+            style={{ marginBottom: '0.5rem' }}
+            onClick={() => setSelectedCompatibleWith([])}
+          >
+            Clear
+          </Button>
+        )}
+        {compatibleWithOptions.map((option) => (
+          <Checkbox
+            key={option}
+            label={option}
+            value={option}
+            isChecked={selectedCompatibleWith.includes(option)}
+            onChange={handleCompatibleWithChange}
+            id={`compatible-${option}`}
+            style={{ marginBottom: '0.5rem' }}
+          />
+        ))}
+
+        <Title headingLevel="h3" size="md" style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+          Platform
+        </Title>
+        {platformOptions.map((option) => (
+          <Checkbox
+            key={option}
+            label={option}
+            value={option}
+            isChecked={selectedPlatforms.includes(option)}
+            onChange={handlePlatformChange}
+            id={`platform-${option}`}
+            style={{ marginBottom: '0.5rem' }}
+          />
+        ))}
+
+        <Title headingLevel="h3" size="md" style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+          Certification level
+        </Title>
+        {certificationLevelOptions.map((option) => (
+          <Checkbox
+            key={option}
+            label={option}
+            value={option}
+            isChecked={selectedCertificationLevels.includes(option)}
+            onChange={handleCertificationLevelChange}
+            id={`certification-${option}`}
+            style={{ marginBottom: '0.5rem' }}
+          />
+        ))}
+
+        <Title headingLevel="h3" size="md" style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+          Infrastructure features
+        </Title>
+        {infrastructureFeaturesOptions.map((option) => (
+          <Checkbox
+            key={option}
+            label={option}
+            value={option}
+            isChecked={selectedInfrastructureFeatures.includes(option)}
+            onChange={handleInfrastructureFeaturesChange}
+            id={`infrastructure-${option}`}
+            style={{ marginBottom: '0.5rem' }}
+          />
+        ))}
+
+        <Title headingLevel="h3" size="md" style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+          Certified for
+        </Title>
+        <TextInput
+          value={certifiedForSearch}
+          type="text"
+          onChange={(_, value) => setCertifiedForSearch(value)}
+          placeholder="🔍 Search Certified for"
+        />
+        {certifiedForOptions
+          .filter((c) => c.toLowerCase().includes(certifiedForSearch.toLowerCase()))
+          .map((option) => (
+            <Checkbox
+              key={option}
+              label={option}
+              value={option}
+              isChecked={selectedCertifiedFor.includes(option)}
+              onChange={handleCertifiedForChange}
+              id={`certified-for-${option}`}
               style={{ marginBottom: '0.5rem' }}
             />
           ))}
@@ -350,7 +566,7 @@ const Catalog: React.FunctionComponent = () => {
                     <CardHeader>
                       <Split>
                         <SplitItem>
-                          <span style={{ fontSize: '2rem', marginRight: '1rem' }}>{item.logo}</span>
+                          <span style={{ fontSize: '1.25rem', marginRight: '1rem' }}>{item.logo}</span>
                         </SplitItem>
                         <SplitItem isFilled>
                           <CardTitle>{item.name}</CardTitle>

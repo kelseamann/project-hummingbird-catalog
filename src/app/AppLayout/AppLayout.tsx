@@ -76,7 +76,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
             </ToolbarItem>
             <ToolbarItem style={{ flex: '1 1 auto', minWidth: 0 }}>
               <SearchInput
-                placeholder="Q Search Ecosystem Catalog"
+                placeholder="🔍 Search Ecosystem Catalog"
                 value={searchValue}
                 onChange={(_, value) => setSearchValue(value)}
                 onClear={() => setSearchValue('')}
@@ -130,7 +130,13 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
                       onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                       aria-label="User menu"
                     >
-                      <Avatar src="" alt="User" />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Avatar
+                          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Ccircle cx='18' cy='18' r='18' fill='%23000000'/%3E%3C/svg%3E"
+                          alt="Kelsea"
+                        />
+                        <span>Kelsea</span>
+                      </div>
                     </MenuToggle>
                   )}
                 >

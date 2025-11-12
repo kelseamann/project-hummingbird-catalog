@@ -1,286 +1,355 @@
 /* App-specific styles */
 
 /* Lo-fi Wireframe Overrides - Black & White with Roboto Mono */
-
-/* Set Roboto Mono as the default font for everything */
-* {
+/* Apply this class to the root element (e.g., <body> or <html>) to enable wireframe mode */
+.lofi-wireframe,
+.lofi-wireframe * {
   font-family: 'Roboto Mono', monospace !important;
 }
 
 /* Remove all colors - make everything black, white, and shades of gray */
-body,
-html,
-#root {
+body.lofi-wireframe,
+html.lofi-wireframe,
+.lofi-wireframe #root {
   color: #000000 !important;
   background-color: #ffffff !important;
 }
 
 /* Override PatternFly colors - make everything grayscale */
 /* Only add borders to buttons that aren't plain/icon buttons */
-.pf-v6-c-button:not(.pf-m-plain):not([class*="plain"]),
-button:not([class*="plain"]):not([aria-label]) {
+.lofi-wireframe .pf-v6-c-button:not(.pf-m-plain):not([class*="plain"]),
+.lofi-wireframe button:not([class*="plain"]):not([aria-label]) {
   background-color: #ffffff !important;
   color: #000000 !important;
   border: 1px solid #000000 !important;
 }
 
-.pf-v6-c-button.pf-m-primary,
-button[class*="primary"] {
+.lofi-wireframe .pf-v6-c-button.pf-m-primary,
+.lofi-wireframe button[class*="primary"] {
   background-color: #000000 !important;
   color: #ffffff !important;
   border: 1px solid #000000 !important;
 }
 
 /* Plain/icon buttons should have no border */
-.pf-v6-c-button.pf-m-plain,
-button[class*="plain"],
-button[aria-label] {
+.lofi-wireframe .pf-v6-c-button.pf-m-plain,
+.lofi-wireframe button[class*="plain"],
+.lofi-wireframe button[aria-label] {
   background-color: transparent !important;
   color: #000000 !important;
   border: none !important;
 }
 
-.pf-v6-c-button:hover:not(.pf-m-plain):not([class*="plain"]),
-button:hover:not([class*="plain"]):not([aria-label]) {
+.lofi-wireframe .pf-v6-c-button:hover:not(.pf-m-plain):not([class*="plain"]),
+.lofi-wireframe button:hover:not([class*="plain"]):not([aria-label]) {
   background-color: #f0f0f0 !important;
   color: #000000 !important;
 }
 
-.pf-v6-c-button.pf-m-primary:hover,
-button[class*="primary"]:hover {
+.lofi-wireframe .pf-v6-c-button.pf-m-primary:hover,
+.lofi-wireframe button[class*="primary"]:hover {
   background-color: #333333 !important;
   color: #ffffff !important;
 }
 
 /* Masthead and navigation - only outer borders */
-.pf-v6-c-masthead {
+.lofi-wireframe .pf-v6-c-masthead {
   background-color: #ffffff !important;
   border-bottom: 1px solid #000000 !important;
 }
 
-.pf-v6-c-nav,
-.pf-v6-c-toolbar {
+.lofi-wireframe .pf-v6-c-nav,
+.lofi-wireframe .pf-v6-c-toolbar {
   background-color: transparent !important;
   border: none !important;
 }
 
 /* Remove borders from internal nav and toolbar items */
-.pf-v6-c-nav__item,
-.pf-v6-c-nav__list-item,
-.pf-v6-c-toolbar__item,
-.pf-v6-c-toolbar__group {
+.lofi-wireframe .pf-v6-c-nav__item,
+.lofi-wireframe .pf-v6-c-nav__list-item,
+.lofi-wireframe .pf-v6-c-toolbar__item,
+.lofi-wireframe .pf-v6-c-toolbar__group {
   border: none !important;
 }
 
 /* Cards - only outer border, not internal elements */
-.pf-v6-c-card {
+.lofi-wireframe .pf-v6-c-card {
   background-color: #ffffff !important;
   border: 1px solid #000000 !important;
   color: #000000 !important;
 }
 
 /* Card internal elements should not have borders */
-.pf-v6-c-card__header,
-.pf-v6-c-card__body,
-.pf-v6-c-card__footer {
+.lofi-wireframe .pf-v6-c-card__header,
+.lofi-wireframe .pf-v6-c-card__body,
+.lofi-wireframe .pf-v6-c-card__footer {
   background-color: transparent !important;
   border: none !important;
   color: #000000 !important;
 }
 
 /* Inputs and form elements */
-input,
-textarea,
-select,
-.pf-v6-c-form-control,
-.pf-v6-c-text-input,
-.pf-v6-c-search-input {
+.lofi-wireframe input,
+.lofi-wireframe textarea,
+.lofi-wireframe select,
+.lofi-wireframe .pf-v6-c-form-control,
+.lofi-wireframe .pf-v6-c-text-input,
+.lofi-wireframe .pf-v6-c-search-input {
   background-color: #ffffff !important;
   color: #000000 !important;
   border: 1px solid #000000 !important;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
+/* Remove any double borders from TextInput wrapper elements */
+.lofi-wireframe .pf-v6-c-text-input__group,
+.lofi-wireframe .pf-v6-c-text-input__group-main,
+.lofi-wireframe .pf-v6-c-form-control__group {
+  border: none !important;
+  border-bottom: none !important;
+  border-top: none !important;
+}
+
+/* Ensure only the actual input element has a border */
+.lofi-wireframe .pf-v6-c-text-input__group input,
+.lofi-wireframe .pf-v6-c-form-control__group input {
+  border: 1px solid #000000 !important;
+}
+
+/* Remove borders from OUIA wrapper elements */
+.lofi-wireframe [data-ouia-component-type],
+.lofi-wireframe [data-ouia-component-id] {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+/* Remove borders from checkboxes that might create lines */
+.lofi-wireframe .pf-v6-c-check,
+.lofi-wireframe .pf-v6-c-check__label,
+.lofi-wireframe .pf-v6-c-check__input {
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+.lofi-wireframe input:focus,
+.lofi-wireframe textarea:focus,
+.lofi-wireframe select:focus {
   border-color: #000000 !important;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2) !important;
 }
 
 /* Dropdowns and menus - only outer borders */
-.pf-v6-c-dropdown__toggle {
+.lofi-wireframe .pf-v6-c-dropdown__toggle {
   background-color: #ffffff !important;
   color: #000000 !important;
   border: 1px solid #000000 !important;
 }
 
-.pf-v6-c-menu,
-.pf-v6-c-dropdown__menu {
+.lofi-wireframe .pf-v6-c-menu,
+.lofi-wireframe .pf-v6-c-dropdown__menu {
   background-color: #ffffff !important;
   color: #000000 !important;
   border: 1px solid #000000 !important;
 }
 
 /* Remove borders from menu items */
-.pf-v6-c-menu__item,
-.pf-v6-c-dropdown__menu-item {
+.lofi-wireframe .pf-v6-c-menu__item,
+.lofi-wireframe .pf-v6-c-dropdown__menu-item {
   border: none !important;
   border-bottom: 1px solid #e0e0e0 !important;
 }
 
-.pf-v6-c-menu__item:last-child,
-.pf-v6-c-dropdown__menu-item:last-child {
+.lofi-wireframe .pf-v6-c-menu__item:last-child,
+.lofi-wireframe .pf-v6-c-dropdown__menu-item:last-child {
   border-bottom: none !important;
 }
 
 /* Badges and labels - only outer borders */
-.pf-v6-c-badge {
+.lofi-wireframe .pf-v6-c-badge {
   background-color: #f0f0f0 !important;
   color: #000000 !important;
   border: 1px solid #000000 !important;
 }
 
-.pf-v6-c-label {
+.lofi-wireframe .pf-v6-c-label {
   background-color: #f0f0f0 !important;
   color: #000000 !important;
   border: 1px solid #000000 !important;
 }
 
 /* Remove borders from label groups internal spacing */
-.pf-v6-c-label-group {
+.lofi-wireframe .pf-v6-c-label-group {
   border: none !important;
 }
 
 /* Pagination - remove internal borders */
-.pf-v6-c-pagination {
+.lofi-wireframe .pf-v6-c-pagination {
   color: #000000 !important;
   border: none !important;
 }
 
-.pf-v6-c-pagination__nav {
+.lofi-wireframe .pf-v6-c-pagination__nav {
   border: none !important;
 }
 
-.pf-v6-c-pagination__nav button {
+.lofi-wireframe .pf-v6-c-pagination__nav button {
   background-color: #ffffff !important;
   color: #000000 !important;
   border: 1px solid #000000 !important;
 }
 
-.pf-v6-c-pagination__nav button:hover,
-.pf-v6-c-pagination__nav button.pf-m-current {
+.lofi-wireframe .pf-v6-c-pagination__nav button:hover,
+.lofi-wireframe .pf-v6-c-pagination__nav button.pf-m-current {
   background-color: #000000 !important;
   color: #ffffff !important;
 }
 
 /* Sidebar - only outer border */
-.pf-v6-c-sidebar {
+.lofi-wireframe .pf-v6-c-sidebar {
   border-right: 1px solid #000000 !important;
 }
 
-.pf-v6-c-sidebar__panel {
+.lofi-wireframe .pf-v6-c-sidebar__panel {
   background-color: #f5f5f5 !important;
   border: none !important;
 }
 
-.pf-v6-c-sidebar__content {
+.lofi-wireframe .pf-v6-c-sidebar__content {
   border: none !important;
+  border-right: none !important;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+}
+
+/* Remove any borders from Grid that might create lines */
+.lofi-wireframe .pf-v6-c-grid {
+  border: none !important;
+  border-right: none !important;
+}
+
+.lofi-wireframe .pf-v6-c-grid__item {
+  border: none !important;
+  border-right: none !important;
+}
+
+/* Remove borders from PageSection */
+.lofi-wireframe .pf-v6-c-page__main-section,
+.lofi-wireframe .pf-v6-c-page-section {
+  border: none !important;
+  border-right: none !important;
+}
+
+/* Remove right border from any container that might wrap the cards */
+.lofi-wireframe [class*="content"],
+.lofi-wireframe [class*="container"],
+.lofi-wireframe [class*="wrapper"] {
+  border-right: none !important;
 }
 
 /* Links */
-a,
-.pf-v6-c-button.pf-m-link,
-button[class*="link"] {
+.lofi-wireframe a,
+.lofi-wireframe .pf-v6-c-button.pf-m-link,
+.lofi-wireframe button[class*="link"] {
   color: #000000 !important;
   text-decoration: underline !important;
 }
 
-a:hover,
-.pf-v6-c-button.pf-m-link:hover {
+.lofi-wireframe a:hover,
+.lofi-wireframe .pf-v6-c-button.pf-m-link:hover {
   color: #333333 !important;
 }
 
 /* Icons - make them black */
-svg,
-.pf-v6-c-icon {
+.lofi-wireframe svg,
+.lofi-wireframe .pf-v6-c-icon {
   fill: #000000 !important;
   color: #000000 !important;
 }
 
 /* Remove any blue colors */
-[style*="blue"],
-[style*="#0066CC"],
-[style*="#0066cc"],
-[style*="rgb(0, 102, 204)"] {
+.lofi-wireframe [style*="blue"],
+.lofi-wireframe [style*="#0066CC"],
+.lofi-wireframe [style*="#0066cc"],
+.lofi-wireframe [style*="rgb(0, 102, 204)"] {
   color: #000000 !important;
   background-color: #ffffff !important;
   border-color: #000000 !important;
 }
 
 /* Title and headings */
-h1, h2, h3, h4, h5, h6,
-.pf-v6-c-title {
+.lofi-wireframe h1, 
+.lofi-wireframe h2, 
+.lofi-wireframe h3, 
+.lofi-wireframe h4, 
+.lofi-wireframe h5, 
+.lofi-wireframe h6,
+.lofi-wireframe .pf-v6-c-title {
   color: #000000 !important;
 }
 
 /* Remove any gradients */
-[style*="gradient"],
-.pf-v6-c-background-image {
+.lofi-wireframe [style*="gradient"],
+.lofi-wireframe .pf-v6-c-background-image {
   background: #ffffff !important;
   background-image: none !important;
 }
 
 /* Override any colored backgrounds - but don't add borders unless it's an outer component */
-[class*="primary"]:not(.pf-v6-c-button):not(button),
-[class*="success"]:not(.pf-v6-c-button):not(button),
-[class*="warning"]:not(.pf-v6-c-button):not(button),
-[class*="danger"]:not(.pf-v6-c-button):not(button),
-[class*="info"]:not(.pf-v6-c-button):not(button) {
+.lofi-wireframe [class*="primary"]:not(.pf-v6-c-button):not(button),
+.lofi-wireframe [class*="success"]:not(.pf-v6-c-button):not(button),
+.lofi-wireframe [class*="warning"]:not(.pf-v6-c-button):not(button),
+.lofi-wireframe [class*="danger"]:not(.pf-v6-c-button):not(button),
+.lofi-wireframe [class*="info"]:not(.pf-v6-c-button):not(button) {
   background-color: #ffffff !important;
   color: #000000 !important;
 }
 
 /* Make active/selected states use black background */
-[class*="active"],
-[class*="selected"],
-[aria-selected="true"] {
+.lofi-wireframe [class*="active"],
+.lofi-wireframe [class*="selected"],
+.lofi-wireframe [aria-selected="true"] {
   background-color: #000000 !important;
   color: #ffffff !important;
 }
 
 /* Override any hover states to use gray */
-:hover {
+.lofi-wireframe :hover {
   background-color: inherit !important;
 }
 
-button:hover,
-a:hover,
-[role="button"]:hover {
+.lofi-wireframe button:hover,
+.lofi-wireframe a:hover,
+.lofi-wireframe [role="button"]:hover {
   background-color: #f0f0f0 !important;
 }
 
 /* Ensure all text is black */
-p, span, div, li, td, th {
+.lofi-wireframe p, 
+.lofi-wireframe span, 
+.lofi-wireframe div, 
+.lofi-wireframe li, 
+.lofi-wireframe td, 
+.lofi-wireframe th {
   color: #000000 !important;
 }
 
 /* Remove borders from internal layout elements */
-.pf-v6-c-split,
-.pf-v6-c-split__item,
-.pf-v6-c-grid,
-.pf-v6-c-grid__item {
+.lofi-wireframe .pf-v6-c-split,
+.lofi-wireframe .pf-v6-c-split__item,
+.lofi-wireframe .pf-v6-c-grid,
+.lofi-wireframe .pf-v6-c-grid__item {
   border: none !important;
 }
 
 /* Remove borders from dividers that are internal */
-.pf-v6-c-divider:not(.pf-m-vertical) {
+.lofi-wireframe .pf-v6-c-divider:not(.pf-m-vertical) {
   border-top: 1px solid #e0e0e0 !important;
   border-bottom: none !important;
   border-left: none !important;
   border-right: none !important;
 }
 
-.pf-v6-c-divider.pf-m-vertical {
+.lofi-wireframe .pf-v6-c-divider.pf-m-vertical {
   border-left: 1px solid #e0e0e0 !important;
   border-top: none !important;
   border-bottom: none !important;
@@ -288,17 +357,17 @@ p, span, div, li, td, th {
 }
 
 /* Remove any box shadows or effects that add color (except focus states) */
-* {
+.lofi-wireframe * {
   text-shadow: none !important;
 }
 
 /* Remove colored box shadows, but allow simple black/gray ones for focus */
-*:not(:focus) {
+.lofi-wireframe *:not(:focus) {
   box-shadow: none !important;
 }
 
 /* Override PatternFly's default colors */
-:root {
+.lofi-wireframe {
   --pf-v6-global--Color--100: #000000 !important;
   --pf-v6-global--Color--200: #000000 !important;
   --pf-v6-global--BackgroundColor--100: #ffffff !important;
@@ -307,4 +376,3 @@ p, span, div, li, td, th {
   --pf-v6-global--primary-color--100: #000000 !important;
   --pf-v6-global--primary-color--200: #000000 !important;
 }
-
