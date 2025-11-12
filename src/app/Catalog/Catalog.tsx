@@ -115,7 +115,7 @@ const Catalog: React.FunctionComponent = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [perPage, setPerPage] = React.useState(20);
   const [isSortOpen, setIsSortOpen] = React.useState(false);
-  const [activeFilters, setActiveFilters] = React.useState<string[]>(['Compatible with Red Hat OpenShift AI']);
+  const [activeFilters, setActiveFilters] = React.useState<string[]>([]);
 
   const typeOptions = ['Standalone application', 'Containerized application'];
   const deploymentOptions = ['Helm chart', 'Operator'];
@@ -233,13 +233,88 @@ const Catalog: React.FunctionComponent = () => {
   return (
     <>
       <PageSection variant={PageSectionVariants.default}>
-        <Split>
-          <SplitItem>
-            <Title headingLevel="h1" size="2xl">
-              Software results ({totalResults} results)
-            </Title>
-          </SplitItem>
-        </Split>
+        <Toolbar>
+          <ToolbarContent>
+            <ToolbarItem>
+              <Title headingLevel="h1" size="2xl">
+                Software results ({totalResults} results)
+              </Title>
+            </ToolbarItem>
+            <ToolbarGroup align={{ default: 'alignEnd' }}>
+              <ToolbarItem>
+                <Button
+                  variant={viewMode === 'list' ? 'primary' : 'plain'}
+                  icon={<ListIcon />}
+                  onClick={() => setViewMode('list')}
+                  aria-label="List view"
+                />
+              </ToolbarItem>
+              <ToolbarItem>
+                <Button
+                  variant={viewMode === 'grid' ? 'primary' : 'plain'}
+                  icon={<ThIcon />}
+                  onClick={() => setViewMode('grid')}
+                  aria-label="Grid view"
+                />
+              </ToolbarItem>
+              <ToolbarItem>
+                <Dropdown
+                  isOpen={isSortOpen}
+                  onSelect={() => setIsSortOpen(false)}
+                  onOpenChange={(isOpen) => setIsSortOpen(isOpen)}
+                  toggle={(toggleRef) => (
+                    <MenuToggle
+                      ref={toggleRef}
+                      variant="plain"
+                      onClick={() => setIsSortOpen(!isSortOpen)}
+                    >
+                      Sort by: {sortBy === 'relevance' ? 'Relevance' : sortBy}
+                    </MenuToggle>
+                  )}
+                >
+                  <DropdownList>
+                    <DropdownItem
+                      value="relevance"
+                      onClick={() => setSortBy('relevance')}
+                    >
+                      Relevance
+                    </DropdownItem>
+                    <DropdownItem
+                      value="name"
+                      onClick={() => setSortBy('name')}
+                    >
+                      Name
+                    </DropdownItem>
+                    <DropdownItem
+                      value="date"
+                      onClick={() => setSortBy('date')}
+                    >
+                      Date
+                    </DropdownItem>
+                  </DropdownList>
+                </Dropdown>
+              </ToolbarItem>
+              <ToolbarItem>
+                <Pagination
+                  itemCount={totalResults}
+                  page={currentPage}
+                  perPage={perPage}
+                  onSetPage={(_, page) => setCurrentPage(page)}
+                  onPerPageSelect={(_, perPage) => {
+                    setPerPage(perPage);
+                    setCurrentPage(1);
+                  }}
+                  perPageOptions={[
+                    { title: '20', value: 20 },
+                    { title: '50', value: 50 },
+                    { title: '100', value: 100 },
+                  ]}
+                  widgetId="pagination-top"
+                />
+              </ToolbarItem>
+            </ToolbarGroup>
+          </ToolbarContent>
+        </Toolbar>
         <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
           <Split>
             <SplitItem>
@@ -260,91 +335,9 @@ const Catalog: React.FunctionComponent = () => {
                   </Label>
                 ))}
               </LabelGroup>
-              {activeFilters.length > 0 && (
-                <Button variant="link" isInline onClick={clearFilters} style={{ marginLeft: '1rem' }}>
-                  Clear filters
-                </Button>
-              )}
             </SplitItem>
           </Split>
         </div>
-        <Toolbar>
-          <ToolbarContent>
-            <ToolbarGroup>
-              <ToolbarItem>
-                <Button
-                  variant={viewMode === 'list' ? 'primary' : 'plain'}
-                  icon={<ListIcon />}
-                  onClick={() => setViewMode('list')}
-                  aria-label="List view"
-                />
-              </ToolbarItem>
-              <ToolbarItem>
-                <Button
-                  variant={viewMode === 'grid' ? 'primary' : 'plain'}
-                  icon={<ThIcon />}
-                  onClick={() => setViewMode('grid')}
-                  aria-label="Grid view"
-                />
-              </ToolbarItem>
-            </ToolbarGroup>
-            <ToolbarItem>
-              <Dropdown
-                isOpen={isSortOpen}
-                onSelect={() => setIsSortOpen(false)}
-                onOpenChange={(isOpen) => setIsSortOpen(isOpen)}
-                toggle={(toggleRef) => (
-                  <MenuToggle
-                    ref={toggleRef}
-                    variant="plain"
-                    onClick={() => setIsSortOpen(!isSortOpen)}
-                  >
-                    Sort by: {sortBy === 'relevance' ? 'Relevance' : sortBy}
-                  </MenuToggle>
-                )}
-              >
-                <DropdownList>
-                  <DropdownItem
-                    value="relevance"
-                    onClick={() => setSortBy('relevance')}
-                  >
-                    Relevance
-                  </DropdownItem>
-                  <DropdownItem
-                    value="name"
-                    onClick={() => setSortBy('name')}
-                  >
-                    Name
-                  </DropdownItem>
-                  <DropdownItem
-                    value="date"
-                    onClick={() => setSortBy('date')}
-                  >
-                    Date
-                  </DropdownItem>
-                </DropdownList>
-              </Dropdown>
-            </ToolbarItem>
-            <ToolbarItem>
-              <Pagination
-                itemCount={totalResults}
-                page={currentPage}
-                perPage={perPage}
-                onSetPage={(_, page) => setCurrentPage(page)}
-                onPerPageSelect={(_, perPage) => {
-                  setPerPage(perPage);
-                  setCurrentPage(1);
-                }}
-                perPageOptions={[
-                  { title: '20', value: 20 },
-                  { title: '50', value: 50 },
-                  { title: '100', value: 100 },
-                ]}
-                widgetId="pagination-top"
-              />
-            </ToolbarItem>
-          </ToolbarContent>
-        </Toolbar>
       </PageSection>
       <PageSection>
         <Sidebar>

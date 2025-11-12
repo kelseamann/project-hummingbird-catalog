@@ -74,12 +74,13 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
                 </NavList>
               </Nav>
             </ToolbarItem>
-            <ToolbarItem>
+            <ToolbarItem style={{ flex: '1 1 auto', minWidth: 0 }}>
               <SearchInput
                 placeholder="Q Search Ecosystem Catalog"
                 value={searchValue}
                 onChange={(_, value) => setSearchValue(value)}
                 onClear={() => setSearchValue('')}
+                style={{ width: '100%' }}
               />
             </ToolbarItem>
             <ToolbarGroup align={{ default: 'alignEnd' }}>
