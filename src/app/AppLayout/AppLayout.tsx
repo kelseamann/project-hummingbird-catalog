@@ -13,6 +13,7 @@ import {
   Toolbar,
   ToolbarContent,
   ToolbarItem,
+  ToolbarGroup,
   SearchInput,
   Avatar,
   Dropdown,
@@ -81,59 +82,61 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
                 onClear={() => setSearchValue('')}
               />
             </ToolbarItem>
-            <ToolbarItem>
-              <Button variant="plain" aria-label="Favorites">
-                <BellIcon />
-              </Button>
-            </ToolbarItem>
-            <ToolbarItem>
-              <Button variant="plain" aria-label="Contact us">
-                <QuestionCircleIcon />
-              </Button>
-            </ToolbarItem>
-            <ToolbarItem>
-              <Button variant="plain" aria-label="Resources">
-                <ThIcon />
-              </Button>
-            </ToolbarItem>
-            <ToolbarItem>
-              <Dropdown
-                isOpen={isSettingsMenuOpen}
-                onSelect={() => setIsSettingsMenuOpen(false)}
-                onOpenChange={(isOpen) => setIsSettingsMenuOpen(isOpen)}
-                toggle={(toggleRef) => (
-                  <MenuToggle
-                    ref={toggleRef}
-                    variant="plain"
-                    onClick={() => setIsSettingsMenuOpen(!isSettingsMenuOpen)}
-                    aria-label="Settings"
-                  >
-                    <CogIcon />
-                  </MenuToggle>
-                )}
-              >
-                <DropdownList>{settingsMenuItems}</DropdownList>
-              </Dropdown>
-            </ToolbarItem>
-            <ToolbarItem>
-              <Dropdown
-                isOpen={isUserMenuOpen}
-                onSelect={() => setIsUserMenuOpen(false)}
-                onOpenChange={(isOpen) => setIsUserMenuOpen(isOpen)}
-                toggle={(toggleRef) => (
-                  <MenuToggle
-                    ref={toggleRef}
-                    variant="plain"
-                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    aria-label="User menu"
-                  >
-                    <Avatar src="" alt="User" />
-                  </MenuToggle>
-                )}
-              >
-                <DropdownList>{userMenuItems}</DropdownList>
-              </Dropdown>
-            </ToolbarItem>
+            <ToolbarGroup align={{ default: 'alignEnd' }}>
+              <ToolbarItem>
+                <Button variant="plain" aria-label="Favorites">
+                  <BellIcon />
+                </Button>
+              </ToolbarItem>
+              <ToolbarItem>
+                <Button variant="plain" aria-label="Contact us">
+                  <QuestionCircleIcon />
+                </Button>
+              </ToolbarItem>
+              <ToolbarItem>
+                <Button variant="plain" aria-label="Resources">
+                  <ThIcon />
+                </Button>
+              </ToolbarItem>
+              <ToolbarItem>
+                <Dropdown
+                  isOpen={isSettingsMenuOpen}
+                  onSelect={() => setIsSettingsMenuOpen(false)}
+                  onOpenChange={(isOpen) => setIsSettingsMenuOpen(isOpen)}
+                  toggle={(toggleRef) => (
+                    <MenuToggle
+                      ref={toggleRef}
+                      variant="plain"
+                      onClick={() => setIsSettingsMenuOpen(!isSettingsMenuOpen)}
+                      aria-label="Settings"
+                    >
+                      <CogIcon />
+                    </MenuToggle>
+                  )}
+                >
+                  <DropdownList>{settingsMenuItems}</DropdownList>
+                </Dropdown>
+              </ToolbarItem>
+              <ToolbarItem>
+                <Dropdown
+                  isOpen={isUserMenuOpen}
+                  onSelect={() => setIsUserMenuOpen(false)}
+                  onOpenChange={(isOpen) => setIsUserMenuOpen(isOpen)}
+                  toggle={(toggleRef) => (
+                    <MenuToggle
+                      ref={toggleRef}
+                      variant="plain"
+                      onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                      aria-label="User menu"
+                    >
+                      <Avatar src="" alt="User" />
+                    </MenuToggle>
+                  )}
+                >
+                  <DropdownList>{userMenuItems}</DropdownList>
+                </Dropdown>
+              </ToolbarItem>
+            </ToolbarGroup>
           </ToolbarContent>
         </Toolbar>
       </MastheadContent>
