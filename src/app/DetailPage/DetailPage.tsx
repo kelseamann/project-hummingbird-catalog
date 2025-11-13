@@ -196,7 +196,9 @@ const DetailPage: React.FunctionComponent = () => {
             <JumpLinks isVertical label="Jump to section">
               {activeTabKey === 1 ? (
                 <>
-                  <JumpLinksItem href="#cves">Latest CVEs</JumpLinksItem>
+                  {metadataToggles.zeroCVEs && (
+                    <JumpLinksItem href="#cves">Latest CVEs</JumpLinksItem>
+                  )}
                   <JumpLinksItem href="#attestation">Attestation</JumpLinksItem>
                 </>
               ) : metadataToggles.sbom && activeTabKey === 2 ? (
@@ -294,7 +296,7 @@ const DetailPage: React.FunctionComponent = () => {
                 </GridItem>
               )}
               {/* Latest CVEs card - only show in Security tab */}
-              {activeTabKey === 1 && (
+              {activeTabKey === 1 && metadataToggles.zeroCVEs && (
                 <GridItem span={12}>
                   <Card>
                     <CardHeader>
