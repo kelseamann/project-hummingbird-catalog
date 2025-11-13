@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Catalog } from '@app/Catalog/Catalog';
+import { DetailPage } from '@app/DetailPage/DetailPage';
 
 export interface IAppRoute {
   label?: string;
@@ -25,6 +26,12 @@ const routes: AppRouteConfig[] = [
     label: 'Catalog',
     path: '/',
     title: 'Project Hummingbird Catalog',
+  },
+  {
+    element: <DetailPage />,
+    exact: true,
+    path: '/detail/:name',
+    title: 'Project Hummingbird Catalog - Detail',
   },
 ];
 

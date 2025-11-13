@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   PageSection,
   PageSectionVariants,
@@ -46,26 +47,35 @@ interface SoftwareItem {
   tags: string[];
   provider: string;
   published: string;
+  updated: string;
+  scanned: string;
+  fipsStatus?: 'FIPS available' | 'FIPS validated';
 }
 
 const mockSoftware: SoftwareItem[] = [
   {
     id: '1',
-    name: 'hummingbird/image',
+    name: 'CLICKME',
     description: 'All-in-one resource management and optimization platform for Kubernetes',
     logo: '🟣',
     tags: ['Containerized application', 'DevOps'],
-    provider: 'ScaleOps - Cloud-Native Optimization',
+    provider: 'Red Hat',
     published: '5 minutes ago',
+    updated: '2 minutes ago',
+    scanned: '1 minute ago',
+    fipsStatus: 'FIPS available',
   },
   {
     id: '2',
-    name: 'hummingbird/image',
+    name: 'hummingbird/image/FIPS',
     description: 'LINSTOR® is open-source software designed to manage block storage devices for large Linux server clusters.',
     logo: '🟠',
     tags: ['Containerized application', 'Storage'],
-    provider: 'LINBIT USA, LLC',
+    provider: 'Red Hat',
     published: '18 minutes ago',
+    updated: '10 minutes ago',
+    scanned: '5 minutes ago',
+    fipsStatus: 'FIPS validated',
   },
   {
     id: '3',
@@ -75,15 +85,20 @@ const mockSoftware: SoftwareItem[] = [
     tags: ['Containerized application', 'OS & platforms'],
     provider: 'Red Hat',
     published: '1 hour ago',
+    updated: '45 minutes ago',
+    scanned: '30 minutes ago',
   },
   {
     id: '4',
-    name: 'hummingbird/image',
+    name: 'hummingbird/image/FIPS',
     description: 'Cloud Native Application Protection Platform by Palo Alto Networks',
     logo: '🔵',
     tags: ['Containerized application', 'Security'],
-    provider: 'Palo Alto Networks Inc.',
+    provider: 'Red Hat',
     published: '2 hours ago',
+    updated: '1 hour ago',
+    scanned: '45 minutes ago',
+    fipsStatus: 'FIPS available',
   },
   {
     id: '5',
@@ -91,21 +106,27 @@ const mockSoftware: SoftwareItem[] = [
     description: 'A framework for building Kubernetes operators',
     logo: '⚪',
     tags: ['Containerized application', 'DevOps'],
-    provider: 'CNCF',
+    provider: 'Red Hat',
     published: '3 hours ago',
+    updated: '2 hours ago',
+    scanned: '1 hour ago',
   },
   {
     id: '6',
-    name: 'hummingbird/image',
+    name: 'hummingbird/image/FIPS',
     description: 'Open-source systems monitoring and alerting toolkit',
     logo: '🔴',
     tags: ['Containerized application', 'Monitoring'],
-    provider: 'Prometheus',
+    provider: 'Red Hat',
     published: '4 hours ago',
+    updated: '3 hours ago',
+    scanned: '2 hours ago',
+    fipsStatus: 'FIPS validated',
   },
 ];
 
 const Catalog: React.FunctionComponent = () => {
+  const navigate = useNavigate();
   const [selectedType, setSelectedType] = React.useState<string[]>(['Containerized application']);
   const [selectedDeployment, setSelectedDeployment] = React.useState<string[]>([]);
   const [providerSearch, setProviderSearch] = React.useState('');
@@ -129,52 +150,24 @@ const Catalog: React.FunctionComponent = () => {
   const deploymentOptions = ['Helm chart', 'Operator'];
   const providerOptions = [
     '21 Analytics AG',
-    '6WIND',
-    '6fusion',
-    'A10 Networks',
-    'A5g Networks, Inc.',
-    'AI EdgeLabs',
-    'AMDOCS',
-    'ATS',
   ];
   const categoryOptions = [
     'AI',
-    'Analytics',
-    'App dev',
-    'App modernization',
-    'Automation',
-    'Backup & Recovery',
-    'Cloud',
-    'Compute',
   ];
   const compatibleWithOptions = [
     'Red Hat OpenShift AI',
-    'Red Hat OpenShift Virtualization',
   ];
   const platformOptions = [
     'Red Hat Enterprise Linux',
-    'Red Hat OpenShift',
-    'Red Hat OpenStack Platform',
   ];
   const certificationLevelOptions = [
     'Certified by Red Hat',
-    'Certified by Red Hat and Partner Validated',
   ];
   const infrastructureFeaturesOptions = [
     'Cloud-native Network Function (CNF)',
-    'Container Network Interface (CNI)',
-    'Container Storage Interface (CSI)',
-    'OpenShift Virtualization',
   ];
   const certifiedForOptions = [
     'Azure Red Hat OpenShift 4',
-    'Red Hat Enterprise Linux 9',
-    'Red Hat Enterprise Linux 8',
-    'Red Hat Enterprise Linux 7',
-    'Red Hat Enterprise Linux 6',
-    'Red Hat Enterprise Linux 5',
-    'Red Hat Gluster Storage 3',
-    'Red Hat OpenShift Container Platform 4',
   ];
 
   const handleTypeChange = (event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
@@ -451,11 +444,11 @@ const Catalog: React.FunctionComponent = () => {
       <PageSection variant={PageSectionVariants.default}>
         <Toolbar>
           <ToolbarContent>
-            <ToolbarItem>
-              <Title headingLevel="h1" size="2xl">
-                Software results ({totalResults} results)
-              </Title>
-            </ToolbarItem>
+                  <ToolbarItem>
+                    <Title headingLevel="h1" size="2xl">
+                      Search results ({totalResults} results)
+                    </Title>
+                  </ToolbarItem>
             <ToolbarGroup align={{ default: 'alignEnd' }}>
               <ToolbarItem>
                 <Button
@@ -481,10 +474,9 @@ const Catalog: React.FunctionComponent = () => {
                   toggle={(toggleRef) => (
                     <MenuToggle
                       ref={toggleRef}
-                      variant="plain"
                       onClick={() => setIsSortOpen(!isSortOpen)}
                     >
-                      Sort by: {sortBy === 'relevance' ? 'Relevance' : sortBy}
+                      Sort by: {sortBy === 'relevance' ? 'Relevance' : sortBy === 'updated' ? 'Last updated' : sortBy === 'scanned' ? 'Last scanned' : sortBy === 'published' ? 'Last published' : sortBy}
                     </MenuToggle>
                   )}
                 >
@@ -496,16 +488,22 @@ const Catalog: React.FunctionComponent = () => {
                       Relevance
                     </DropdownItem>
                     <DropdownItem
-                      value="name"
-                      onClick={() => setSortBy('name')}
+                      value="updated"
+                      onClick={() => setSortBy('updated')}
                     >
-                      Name
+                      Last updated
                     </DropdownItem>
                     <DropdownItem
-                      value="date"
-                      onClick={() => setSortBy('date')}
+                      value="scanned"
+                      onClick={() => setSortBy('scanned')}
                     >
-                      Date
+                      Last scanned
+                    </DropdownItem>
+                    <DropdownItem
+                      value="published"
+                      onClick={() => setSortBy('published')}
+                    >
+                      Last published
                     </DropdownItem>
                   </DropdownList>
                 </Dropdown>
@@ -531,13 +529,8 @@ const Catalog: React.FunctionComponent = () => {
             </ToolbarGroup>
           </ToolbarContent>
         </Toolbar>
-        <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+        <div style={{ marginTop: '0', marginBottom: '0' }}>
           <Split>
-            <SplitItem>
-              <Button variant="link" isInline>
-                &lt; Back to all results
-              </Button>
-            </SplitItem>
             <SplitItem isFilled />
             <SplitItem>
               <LabelGroup>
@@ -555,21 +548,42 @@ const Catalog: React.FunctionComponent = () => {
           </Split>
         </div>
       </PageSection>
-      <PageSection>
+      <PageSection style={{ paddingTop: '0' }}>
         <Sidebar>
           <SidebarPanel>{sidebar}</SidebarPanel>
           <SidebarContent>
             <Grid hasGutter>
               {displayedSoftware.map((item) => (
                 <GridItem key={item.id} span={viewMode === 'grid' ? 6 : 12}>
-                  <Card>
+                  <Card
+                    isClickable={item.name === 'CLICKME'}
+                    onClick={() => {
+                      if (item.name === 'CLICKME') {
+                        navigate(`/detail/${encodeURIComponent(item.name)}`);
+                      }
+                    }}
+                    style={{ cursor: item.name === 'CLICKME' ? 'pointer' : 'default' }}
+                  >
                     <CardHeader>
                       <Split>
                         <SplitItem>
                           <span style={{ fontSize: '1.25rem', marginRight: '1rem' }}>{item.logo}</span>
                         </SplitItem>
                         <SplitItem isFilled>
-                          <CardTitle>{item.name}</CardTitle>
+                          <div>
+                            <CardTitle style={item.name === 'CLICKME' ? { color: '#0066cc', textDecoration: 'underline' } : undefined}>
+                              {item.name}
+                            </CardTitle>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                              <span>
+                                <ThIcon style={{ marginRight: '0.25rem' }} />
+                                {item.provider}
+                              </span>
+                              {item.fipsStatus && (
+                                <Badge><span className="highlighter">{item.fipsStatus}</span></Badge>
+                              )}
+                            </div>
+                          </div>
                         </SplitItem>
                         <SplitItem>
                           <Button variant="plain" aria-label="Add to favorites">
@@ -580,32 +594,20 @@ const Catalog: React.FunctionComponent = () => {
                     </CardHeader>
                     <CardBody>{item.description}</CardBody>
                     <CardFooter>
-                      <Split>
-                        <SplitItem>
-                          {item.tags.map((tag) => (
-                            <Badge key={tag} style={{ marginRight: '0.5rem' }}>
-                              {tag}
-                            </Badge>
-                          ))}
-                        </SplitItem>
-                        <SplitItem isFilled />
-                        <SplitItem>
-                          <Split>
-                            <SplitItem>
-                              <span style={{ marginRight: '1rem' }}>
-                                <ThIcon style={{ marginRight: '0.25rem' }} />
-                                {item.provider}
-                              </span>
-                            </SplitItem>
-                            <SplitItem>
-                              <span>
-                                <ClockIcon style={{ marginRight: '0.25rem' }} />
-                                Published {item.published}
-                              </span>
-                            </SplitItem>
-                          </Split>
-                        </SplitItem>
-                      </Split>
+                      <div style={{ display: 'flex', gap: '1rem' }}>
+                        <span>
+                          <ClockIcon style={{ marginRight: '0.25rem' }} />
+                          Published {item.published}
+                        </span>
+                        <span className="highlighter">
+                          <ClockIcon style={{ marginRight: '0.25rem' }} />
+                          Updated {item.updated}
+                        </span>
+                        <span className="highlighter">
+                          <ClockIcon style={{ marginRight: '0.25rem' }} />
+                          Scanned {item.scanned}
+                        </span>
+                      </div>
                     </CardFooter>
                   </Card>
                 </GridItem>
