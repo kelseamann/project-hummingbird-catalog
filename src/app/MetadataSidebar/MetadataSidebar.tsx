@@ -32,13 +32,15 @@ interface MetadataSidebarProps {
   onClose: () => void;
   toggles: MetadataToggles;
   onToggleChange: (key: keyof MetadataToggles, value: boolean) => void;
+  isDetailPage?: boolean;
 }
 
 const MetadataSidebar: React.FunctionComponent<MetadataSidebarProps> = ({ 
   isOpen, 
   onClose, 
   toggles,
-  onToggleChange 
+  onToggleChange,
+  isDetailPage = false
 }) => {
   if (!isOpen) return null;
 
@@ -106,18 +108,22 @@ const MetadataSidebar: React.FunctionComponent<MetadataSidebarProps> = ({
               isChecked={toggles.versionNumber}
               onChange={(_, checked) => onToggleChange('versionNumber', checked)}
             />
-            <Switch
-              id="zero-cves-switch"
-              label="Zero CVEs"
-              isChecked={toggles.zeroCVEs}
-              onChange={(_, checked) => onToggleChange('zeroCVEs', checked)}
-            />
-            <Switch
-              id="sbom-switch"
-              label="SBOM"
-              isChecked={toggles.sbom}
-              onChange={(_, checked) => onToggleChange('sbom', checked)}
-            />
+            {isDetailPage && (
+              <>
+                <Switch
+                  id="zero-cves-switch"
+                  label="Zero CVEs"
+                  isChecked={toggles.zeroCVEs}
+                  onChange={(_, checked) => onToggleChange('zeroCVEs', checked)}
+                />
+                <Switch
+                  id="sbom-switch"
+                  label="SBOM"
+                  isChecked={toggles.sbom}
+                  onChange={(_, checked) => onToggleChange('sbom', checked)}
+                />
+              </>
+            )}
           </div>
         )}
       </div>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { MetadataSidebar, MetadataToggles } from '@app/MetadataSidebar/MetadataSidebar';
 import { MetadataProvider } from '@app/MetadataContext/MetadataContext';
+import { useLocation } from 'react-router-dom';
 import {
   Button,
   Masthead,
@@ -30,6 +31,8 @@ interface IAppLayout {
 }
 
 const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
+  const location = useLocation();
+  const isDetailPage = location.pathname.startsWith('/detail/');
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
@@ -209,6 +212,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
             onClose={() => setIsMetadataSidebarOpen(false)}
             toggles={metadataToggles}
             onToggleChange={handleToggleChange}
+            isDetailPage={isDetailPage}
           />
         )}
         <div style={{ flex: 1, overflow: 'auto' }}>
