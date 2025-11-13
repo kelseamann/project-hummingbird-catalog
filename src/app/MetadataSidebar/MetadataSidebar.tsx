@@ -81,48 +81,42 @@ const MetadataSidebar: React.FunctionComponent<MetadataSidebarProps> = ({
               </Button>
               </div>
         {toggles.newSection && (
-          <div style={{ paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <Switch
               id="fips-chips-switch"
               label="FIPS chips"
               isChecked={toggles.fipsChips}
               onChange={(_, checked) => onToggleChange('fipsChips', checked)}
-              style={{ marginBottom: '0.5rem' }}
             />
             <Switch
               id="updated-time-switch"
               label="Updated time"
               isChecked={toggles.updatedTime}
               onChange={(_, checked) => onToggleChange('updatedTime', checked)}
-              style={{ marginBottom: '0.5rem' }}
             />
             <Switch
               id="scanned-time-switch"
               label="Scanned time"
               isChecked={toggles.scannedTime}
               onChange={(_, checked) => onToggleChange('scannedTime', checked)}
-              style={{ marginBottom: '0.5rem' }}
             />
             <Switch
               id="version-number-switch"
               label="Version number"
               isChecked={toggles.versionNumber}
               onChange={(_, checked) => onToggleChange('versionNumber', checked)}
-              style={{ marginBottom: '0.5rem' }}
             />
             <Switch
               id="zero-cves-switch"
               label="Zero CVEs"
               isChecked={toggles.zeroCVEs}
               onChange={(_, checked) => onToggleChange('zeroCVEs', checked)}
-              style={{ marginBottom: '0.5rem' }}
             />
             <Switch
               id="sbom-switch"
               label="SBOM"
               isChecked={toggles.sbom}
               onChange={(_, checked) => onToggleChange('sbom', checked)}
-              style={{ marginBottom: '0.5rem' }}
             />
           </div>
         )}
