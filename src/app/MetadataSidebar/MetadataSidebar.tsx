@@ -72,13 +72,13 @@ const MetadataSidebar: React.FunctionComponent<MetadataSidebarProps> = ({
                   isChecked={toggles.newSection}
                   onChange={(_, checked) => onToggleChange('newSection', checked)}
                 />
-                <Button
-                  variant={toggles.highlightsActive ? 'primary' : 'secondary'}
-                  onClick={() => onToggleChange('highlightsActive', !toggles.highlightsActive)}
-                  style={{ padding: '4px 12px', fontSize: '0.875rem' }}
-                >
-                  {toggles.highlightsActive ? '🖍️ ON' : '🖍️ OFF'}
-                </Button>
+              <Button
+                variant={toggles.highlightsActive ? 'primary' : 'secondary'}
+                onClick={() => onToggleChange('highlightsActive', !toggles.highlightsActive)}
+                style={{ padding: '4px 12px', fontSize: '0.875rem' }}
+              >
+                {toggles.highlightsActive ? 'Highlights on' : 'Highlights off'}
+              </Button>
               </div>
         {toggles.newSection && (
           <div style={{ paddingLeft: '1.5rem' }}>

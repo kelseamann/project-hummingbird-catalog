@@ -50,8 +50,8 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     favoriting: true,
     // CATALOG section - on by default
     filtering: true,
-    // Highlight state - on by default
-    highlightsActive: true,
+    // Highlight state - off by default
+    highlightsActive: false,
   });
 
   const handleToggleChange = (key: keyof MetadataToggles, value: boolean) => {
