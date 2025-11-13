@@ -267,6 +267,12 @@ html.lofi-wireframe,
   padding-right: 48px !important;
 }
 
+/* Ensure sticky positioning works on page sections */
+.lofi-wireframe .pf-v6-c-page__main-section[style*="position: sticky"],
+.lofi-wireframe .pf-v6-c-page-section[style*="position: sticky"] {
+  position: sticky !important;
+}
+
 /* Remove right border from any container that might wrap the cards */
 .lofi-wireframe [class*="content"],
 .lofi-wireframe [class*="container"],

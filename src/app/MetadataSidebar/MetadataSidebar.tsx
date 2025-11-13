@@ -15,6 +15,8 @@ export interface MetadataToggles {
   updatedTime: boolean;
   scannedTime: boolean;
   versionNumber: boolean;
+  zeroCVEs: boolean;
+  sbom: boolean;
   // QUAY section
   publishedTime: boolean;
   distributorName: boolean;
@@ -66,7 +68,7 @@ const MetadataSidebar: React.FunctionComponent<MetadataSidebarProps> = ({
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                 <Switch
                   id="new-section-switch"
-                  label={<strong>NEW</strong>}
+                  label={<strong className="highlighter">NEW</strong>}
                   isChecked={toggles.newSection}
                   onChange={(_, checked) => onToggleChange('newSection', checked)}
                 />
@@ -106,6 +108,20 @@ const MetadataSidebar: React.FunctionComponent<MetadataSidebarProps> = ({
               label="Version number"
               isChecked={toggles.versionNumber}
               onChange={(_, checked) => onToggleChange('versionNumber', checked)}
+              style={{ marginBottom: '0.5rem' }}
+            />
+            <Switch
+              id="zero-cves-switch"
+              label="Zero CVEs"
+              isChecked={toggles.zeroCVEs}
+              onChange={(_, checked) => onToggleChange('zeroCVEs', checked)}
+              style={{ marginBottom: '0.5rem' }}
+            />
+            <Switch
+              id="sbom-switch"
+              label="SBOM"
+              isChecked={toggles.sbom}
+              onChange={(_, checked) => onToggleChange('sbom', checked)}
             />
           </div>
         )}
@@ -116,7 +132,7 @@ const MetadataSidebar: React.FunctionComponent<MetadataSidebarProps> = ({
       {/* QUAY Section */}
       <div style={{ marginBottom: '1.5rem' }}>
         <Title headingLevel="h4" size="md" style={{ marginBottom: '0.5rem' }}>
-          QUAY
+          Best of QUAY
         </Title>
         <Switch
           id="published-time-switch"
@@ -145,7 +161,7 @@ const MetadataSidebar: React.FunctionComponent<MetadataSidebarProps> = ({
       {/* CATALOG Section */}
       <div>
         <Title headingLevel="h4" size="md" style={{ marginBottom: '0.5rem' }}>
-          CATALOG
+          Best of CATALOG
         </Title>
         <Switch
           id="filtering-switch"

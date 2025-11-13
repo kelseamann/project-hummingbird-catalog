@@ -59,7 +59,7 @@ const mockSoftware: SoftwareItem[] = [
     id: '1',
     name: 'CLICKME',
     version: '1.1.0',
-    description: 'All-in-one resource management and optimization platform for Kubernetes',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
     logo: '🟣',
     tags: ['Containerized application', 'DevOps'],
     provider: 'Red Hat',
@@ -72,7 +72,7 @@ const mockSoftware: SoftwareItem[] = [
     id: '2',
     name: 'hummingbird/image/FIPS',
     version: '2.3.1',
-    description: 'LINSTOR® is open-source software designed to manage block storage devices for large Linux server clusters.',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis.',
     logo: '🟠',
     tags: ['Containerized application', 'Storage'],
     provider: 'Red Hat',
@@ -85,7 +85,7 @@ const mockSoftware: SoftwareItem[] = [
     id: '3',
     name: 'hummingbird/image',
     version: '1.0.5',
-    description: 'Windows Machine Config Operator is an operator providing the ability to run Windows compute nodes in an OpenShift Container Platform cluster.',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
     logo: '🔴',
     tags: ['Containerized application', 'OS & platforms'],
     provider: 'Red Hat',
@@ -97,7 +97,7 @@ const mockSoftware: SoftwareItem[] = [
     id: '4',
     name: 'hummingbird/image/FIPS',
     version: '3.2.0',
-    description: 'Cloud Native Application Protection Platform by Palo Alto Networks',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     logo: '🔵',
     tags: ['Containerized application', 'Security'],
     provider: 'Red Hat',
@@ -110,7 +110,7 @@ const mockSoftware: SoftwareItem[] = [
     id: '5',
     name: 'hummingbird/image',
     version: '1.8.2',
-    description: 'A framework for building Kubernetes operators',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur exercitation ullamco.',
     logo: '⚪',
     tags: ['Containerized application', 'DevOps'],
     provider: 'Red Hat',
@@ -122,7 +122,7 @@ const mockSoftware: SoftwareItem[] = [
     id: '6',
     name: 'hummingbird/image/FIPS',
     version: '2.5.4',
-    description: 'Open-source systems monitoring and alerting toolkit',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum excepteur.',
     logo: '🔴',
     tags: ['Containerized application', 'Monitoring'],
     provider: 'Red Hat',
@@ -585,25 +585,29 @@ const Catalog: React.FunctionComponent = () => {
                                 {item.name} {item.version}
                               </CardTitle>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-                        <span>
-                          <ThIcon style={{ marginRight: '0.25rem' }} />
-                          {item.provider}
-                        </span>
+                        {metadataToggles.distributorName && (
+                          <span>
+                            <ThIcon style={{ marginRight: '0.25rem' }} />
+                            {item.provider}
+                          </span>
+                        )}
                         {item.fipsStatus && (
                           <Badge><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>{item.fipsStatus}</span></Badge>
                         )}
                               </div>
-                            </div>
-                          </SplitItem>
+                          </div>
+                        </SplitItem>
+                        {metadataToggles.favoriting && (
                           <SplitItem>
                             <Button variant="plain" aria-label="Add to favorites">
                               <StarIcon />
                             </Button>
                           </SplitItem>
-                        </Split>
-                      </CardHeader>
-                      <CardBody>{item.description}</CardBody>
-                      <CardFooter>
+                        )}
+                      </Split>
+                    </CardHeader>
+                    <CardBody>{item.description}</CardBody>
+                    <CardFooter>
                         <div style={{ display: 'flex', gap: '1rem' }}>
                       <span>
                         <ClockIcon style={{ marginRight: '0.25rem' }} />
@@ -665,24 +669,28 @@ const Catalog: React.FunctionComponent = () => {
                         <SplitItem isFilled>
                           <div>
                             <CardTitle style={item.name === 'CLICKME' ? { color: '#0066cc', textDecoration: 'underline' } : undefined}>
-                              {item.name} {item.version}
+                              {item.name} <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>{item.version}</span>
                             </CardTitle>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-                              <span>
-                                <ThIcon style={{ marginRight: '0.25rem' }} />
-                                {item.provider}
-                              </span>
-                              {item.fipsStatus && (
-                                <Badge><span className={metadataToggles?.highlightsActive ? "highlighter" : ""}>{item.fipsStatus}</span></Badge>
-                              )}
+                        {metadataToggles.distributorName && (
+                          <span>
+                            <ThIcon style={{ marginRight: '0.25rem' }} />
+                            {item.provider}
+                          </span>
+                        )}
+                        {item.fipsStatus && (
+                          <Badge><span className={metadataToggles?.highlightsActive ? "highlighter" : ""}>{item.fipsStatus}</span></Badge>
+                        )}
                             </div>
                           </div>
                         </SplitItem>
-                        <SplitItem>
-                          <Button variant="plain" aria-label="Add to favorites">
-                            <StarIcon />
-                          </Button>
-                        </SplitItem>
+                        {metadataToggles.favoriting && (
+                          <SplitItem>
+                            <Button variant="plain" aria-label="Add to favorites">
+                              <StarIcon />
+                            </Button>
+                          </SplitItem>
+                        )}
                       </Split>
                     </CardHeader>
                     <CardBody>{item.description}</CardBody>

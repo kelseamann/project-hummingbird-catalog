@@ -42,6 +42,8 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     updatedTime: true,
     scannedTime: true,
     versionNumber: true,
+    zeroCVEs: true,
+    sbom: true,
     // QUAY section - all on by default
     publishedTime: true,
     distributorName: true,
