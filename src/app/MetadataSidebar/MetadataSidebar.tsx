@@ -81,7 +81,7 @@ const MetadataSidebar: React.FunctionComponent<MetadataSidebarProps> = ({
               </Button>
               </div>
         {toggles.newSection && (
-          <div style={{ paddingLeft: '1.5rem' }}>
+          <div style={{ paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column' }}>
             <Switch
               id="fips-chips-switch"
               label="FIPS chips"
