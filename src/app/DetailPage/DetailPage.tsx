@@ -33,9 +33,11 @@ import {
   Toolbar,
   ToolbarContent,
   ToolbarItem,
+  Button,
+  Divider,
 } from '@patternfly/react-core';
 import { Table, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
-import { ClockIcon, ThIcon } from '@patternfly/react-icons';
+import { ClockIcon, ThIcon, DownloadIcon } from '@patternfly/react-icons';
 
 const DetailPage: React.FunctionComponent = () => {
   const { name } = useParams<{ name: string }>();
@@ -133,38 +135,63 @@ const DetailPage: React.FunctionComponent = () => {
       </PageSection>
       <PageSection style={{ paddingTop: '0' }}>
         <Card>
-          <CardHeader>
-            <CardTitle>Start using this image</CardTitle>
-          </CardHeader>
           <CardBody>
-            <FormGroup label="Docker pull command">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style={{ minWidth: '400px' }}>
-                  <ClipboardCopy 
-                    isReadOnly 
-                    hoverTip="Copy" 
-                    clickTip="Copied"
+            <Grid hasGutter>
+              <GridItem span={6}>
+                <Title headingLevel="h3" size="md" style={{ marginBottom: '1rem' }}>
+                  Start using this image
+                </Title>
+                <FormGroup label="Docker pull command">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ minWidth: '400px' }}>
+                      <ClipboardCopy 
+                        isReadOnly 
+                        hoverTip="Copy" 
+                        clickTip="Copied"
+                      >
+                        docker pull quay.io/redhat/image-name
+                      </ClipboardCopy>
+                    </div>
+                    <span>7.13 GiB</span>
+                  </div>
+                </FormGroup>
+                <FormGroup label="Podman pull command" style={{ marginTop: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ minWidth: '400px' }}>
+                      <ClipboardCopy 
+                        isReadOnly 
+                        hoverTip="Copy" 
+                        clickTip="Copied"
+                      >
+                        podman pull quay.io/redhat/image-name
+                      </ClipboardCopy>
+                    </div>
+                    <span>7.13 GiB</span>
+                  </div>
+                </FormGroup>
+              </GridItem>
+              {metadataToggles.sbom && (
+                <GridItem span={6}>
+                  <Title headingLevel="h3" size="md" style={{ marginBottom: '1rem' }}>
+                    Download SBOM
+                  </Title>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                    <DownloadIcon style={{ fontSize: '1.5rem' }} />
+                    <div>
+                      <div style={{ fontWeight: 'bold' }}>sbom-image-name.json</div>
+                      <div style={{ fontSize: '0.875rem', color: '#6a6e73' }}>2.5 MB</div>
+                    </div>
+                  </div>
+                  <Button
+                    variant="link"
+                    isInline
+                    onClick={() => setActiveTabKey(2)}
                   >
-                    docker pull quay.io/redhat/image-name
-                  </ClipboardCopy>
-                </div>
-                <span>7.13 GiB</span>
-              </div>
-            </FormGroup>
-            <FormGroup label="Podman pull command" style={{ marginTop: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style={{ minWidth: '400px' }}>
-                  <ClipboardCopy 
-                    isReadOnly 
-                    hoverTip="Copy" 
-                    clickTip="Copied"
-                  >
-                    podman pull quay.io/redhat/image-name
-                  </ClipboardCopy>
-                </div>
-                <span>7.13 GiB</span>
-              </div>
-            </FormGroup>
+                    View SBOM
+                  </Button>
+                </GridItem>
+              )}
+            </Grid>
           </CardBody>
         </Card>
       </PageSection>
