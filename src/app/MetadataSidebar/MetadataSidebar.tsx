@@ -129,26 +129,26 @@ const MetadataSidebar: React.FunctionComponent<MetadataSidebarProps> = ({
         <Title headingLevel="h4" size="md" style={{ marginBottom: '0.5rem' }}>
           Best of QUAY
         </Title>
-        <Switch
-          id="published-time-switch"
-          label="Published time"
-          isChecked={toggles.publishedTime}
-          onChange={(_, checked) => onToggleChange('publishedTime', checked)}
-          style={{ marginBottom: '0.5rem' }}
-        />
-        <Switch
-          id="distributor-name-switch"
-          label="Distributor name"
-          isChecked={toggles.distributorName}
-          onChange={(_, checked) => onToggleChange('distributorName', checked)}
-          style={{ marginBottom: '0.5rem' }}
-        />
-        <Switch
-          id="favoriting-switch"
-          label="Favoriting"
-          isChecked={toggles.favoriting}
-          onChange={(_, checked) => onToggleChange('favoriting', checked)}
-        />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <Switch
+            id="published-time-switch"
+            label="Published time"
+            isChecked={toggles.publishedTime}
+            onChange={(_, checked) => onToggleChange('publishedTime', checked)}
+          />
+          <Switch
+            id="distributor-name-switch"
+            label="Distributor name"
+            isChecked={toggles.distributorName}
+            onChange={(_, checked) => onToggleChange('distributorName', checked)}
+          />
+          <Switch
+            id="favoriting-switch"
+            label="Favoriting"
+            isChecked={toggles.favoriting}
+            onChange={(_, checked) => onToggleChange('favoriting', checked)}
+          />
+        </div>
       </div>
 
       <Divider style={{ marginBottom: '1.5rem' }} />
@@ -158,12 +158,14 @@ const MetadataSidebar: React.FunctionComponent<MetadataSidebarProps> = ({
         <Title headingLevel="h4" size="md" style={{ marginBottom: '0.5rem' }}>
           Best of CATALOG
         </Title>
-        <Switch
-          id="filtering-switch"
-          label="Filtering"
-          isChecked={toggles.filtering}
-          onChange={(_, checked) => onToggleChange('filtering', checked)}
-        />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <Switch
+            id="filtering-switch"
+            label="Filtering"
+            isChecked={toggles.filtering}
+            onChange={(_, checked) => onToggleChange('filtering', checked)}
+          />
+        </div>
       </div>
     </div>
   );
