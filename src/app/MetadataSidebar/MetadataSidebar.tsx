@@ -82,50 +82,48 @@ const MetadataSidebar: React.FunctionComponent<MetadataSidebarProps> = ({
                 {toggles.highlightsActive ? 'Highlights on' : 'Highlights off'}
               </Button>
               </div>
-        {toggles.newSection && (
-          <div style={{ paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <Switch
-              id="fips-chips-switch"
-              label="FIPS chips"
-              isChecked={toggles.fipsChips}
-              onChange={(_, checked) => onToggleChange('fipsChips', checked)}
-            />
-            <Switch
-              id="updated-time-switch"
-              label="Updated time"
-              isChecked={toggles.updatedTime}
-              onChange={(_, checked) => onToggleChange('updatedTime', checked)}
-            />
-            <Switch
-              id="scanned-time-switch"
-              label="Scanned time"
-              isChecked={toggles.scannedTime}
-              onChange={(_, checked) => onToggleChange('scannedTime', checked)}
-            />
-            <Switch
-              id="version-number-switch"
-              label="Version number"
-              isChecked={toggles.versionNumber}
-              onChange={(_, checked) => onToggleChange('versionNumber', checked)}
-            />
-            {isDetailPage && (
-              <>
-                <Switch
-                  id="zero-cves-switch"
-                  label="Zero CVEs"
-                  isChecked={toggles.zeroCVEs}
-                  onChange={(_, checked) => onToggleChange('zeroCVEs', checked)}
-                />
-                <Switch
-                  id="sbom-switch"
-                  label="SBOM"
-                  isChecked={toggles.sbom}
-                  onChange={(_, checked) => onToggleChange('sbom', checked)}
-                />
-              </>
-            )}
-          </div>
-        )}
+        <div style={{ paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <Switch
+            id="fips-chips-switch"
+            label="FIPS chips"
+            isChecked={toggles.fipsChips}
+            onChange={(_, checked) => onToggleChange('fipsChips', checked)}
+          />
+          <Switch
+            id="updated-time-switch"
+            label="Updated time"
+            isChecked={toggles.updatedTime}
+            onChange={(_, checked) => onToggleChange('updatedTime', checked)}
+          />
+          <Switch
+            id="scanned-time-switch"
+            label="Scanned time"
+            isChecked={toggles.scannedTime}
+            onChange={(_, checked) => onToggleChange('scannedTime', checked)}
+          />
+          <Switch
+            id="version-number-switch"
+            label="Version number"
+            isChecked={toggles.versionNumber}
+            onChange={(_, checked) => onToggleChange('versionNumber', checked)}
+          />
+          {isDetailPage && (
+            <>
+              <Switch
+                id="zero-cves-switch"
+                label="Zero CVEs"
+                isChecked={toggles.zeroCVEs}
+                onChange={(_, checked) => onToggleChange('zeroCVEs', checked)}
+              />
+              <Switch
+                id="sbom-switch"
+                label="SBOM"
+                isChecked={toggles.sbom}
+                onChange={(_, checked) => onToggleChange('sbom', checked)}
+              />
+            </>
+          )}
+        </div>
       </div>
 
       <Divider style={{ marginBottom: '1.5rem' }} />

@@ -58,17 +58,17 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   });
 
   const handleToggleChange = (key: keyof MetadataToggles, value: boolean) => {
-    if (key === 'newSection' && !value) {
-      // When turning off NEW section, turn off all child toggles
+    if (key === 'newSection') {
+      // Master switch: turn all child toggles on or off together
       setMetadataToggles(prev => ({
         ...prev,
-        newSection: false,
-        fipsChips: false,
-        updatedTime: false,
-        scannedTime: false,
-        versionNumber: false,
-        zeroCVEs: false,
-        sbom: false,
+        newSection: value,
+        fipsChips: value,
+        updatedTime: value,
+        scannedTime: value,
+        versionNumber: value,
+        zeroCVEs: value,
+        sbom: value,
       }));
     } else {
       setMetadataToggles(prev => ({ ...prev, [key]: value }));
