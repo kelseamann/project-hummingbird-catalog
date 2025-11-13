@@ -358,6 +358,40 @@ const DetailPage: React.FunctionComponent = () => {
                   </Card>
                 </GridItem>
               )}
+              {/* Attestation card - only show in Security tab */}
+              {activeTabKey === 0 && (
+                <GridItem span={12}>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Attestation</CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <Table variant="compact">
+                        <Thead>
+                          <Tr>
+                            <Th>Type</Th>
+                            <Th>Description</Th>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          <Tr>
+                            <Td>slsa.dev</Td>
+                            <Td></Td>
+                          </Tr>
+                          <Tr>
+                            <Td>apko.dev</Td>
+                            <Td></Td>
+                          </Tr>
+                          <Tr>
+                            <Td>spdx.dev</Td>
+                            <Td></Td>
+                          </Tr>
+                        </Tbody>
+                      </Table>
+                    </CardBody>
+                  </Card>
+                </GridItem>
+              )}
               {/* Empty content section cards */}
               {contentSections.map((_, index) => (
                 <GridItem key={`content-${index}`} span={12}>
