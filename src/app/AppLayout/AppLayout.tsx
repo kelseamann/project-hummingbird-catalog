@@ -91,8 +91,8 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
         </MastheadBrand>
       </MastheadMain>
       <MastheadContent>
-        <Toolbar>
-          <ToolbarContent>
+        <Toolbar isFullHeight>
+          <ToolbarContent style={{ alignItems: 'center' }}>
             <ToolbarItem>
               <Nav variant="horizontal">
                 <NavList>
