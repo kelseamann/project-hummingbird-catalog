@@ -58,7 +58,21 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   });
 
   const handleToggleChange = (key: keyof MetadataToggles, value: boolean) => {
-    setMetadataToggles(prev => ({ ...prev, [key]: value }));
+    if (key === 'newSection' && !value) {
+      // When turning off NEW section, turn off all child toggles
+      setMetadataToggles(prev => ({
+        ...prev,
+        newSection: false,
+        fipsChips: false,
+        updatedTime: false,
+        scannedTime: false,
+        versionNumber: false,
+        zeroCVEs: false,
+        sbom: false,
+      }));
+    } else {
+      setMetadataToggles(prev => ({ ...prev, [key]: value }));
+    }
   };
 
   const userMenuItems = (
