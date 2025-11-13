@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { MetadataSidebar, MetadataToggles } from '@app/MetadataSidebar/MetadataSidebar';
+import { MetadataProvider } from '@app/MetadataContext/MetadataContext';
 import {
   Button,
   Masthead,
@@ -31,6 +33,28 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
+  const [isMetadataSidebarOpen, setIsMetadataSidebarOpen] = React.useState(true);
+  const [metadataToggles, setMetadataToggles] = React.useState<MetadataToggles>({
+    // NEW section master toggle
+    newSection: true,
+    // NEW section - all on by default
+    fipsChips: true,
+    updatedTime: true,
+    scannedTime: true,
+    versionNumber: true,
+    // QUAY section - all on by default
+    publishedTime: true,
+    distributorName: true,
+    favoriting: true,
+    // CATALOG section - on by default
+    filtering: true,
+    // Highlight state - on by default
+    highlightsActive: true,
+  });
+
+  const handleToggleChange = (key: keyof MetadataToggles, value: boolean) => {
+    setMetadataToggles(prev => ({ ...prev, [key]: value }));
+  };
 
   const userMenuItems = (
     <>
@@ -100,6 +124,15 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
                 </Button>
               </ToolbarItem>
               <ToolbarItem>
+                <Button 
+                  variant="plain" 
+                  aria-label="Toggle metadata sidebar"
+                  onClick={() => setIsMetadataSidebarOpen(!isMetadataSidebarOpen)}
+                >
+                  <BellIcon />
+                </Button>
+              </ToolbarItem>
+              <ToolbarItem>
                 <Dropdown
                   isOpen={isSettingsMenuOpen}
                   onSelect={() => setIsSettingsMenuOpen(false)}
@@ -166,13 +199,27 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   );
 
   return (
-    <Page
-      mainContainerId={pageId}
-      masthead={masthead}
-      skipToContent={PageSkipToContent}
-    >
-      {children}
-    </Page>
+    <MetadataProvider value={{ metadataToggles, setMetadataToggles }}>
+      <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+        {isMetadataSidebarOpen && (
+          <MetadataSidebar
+            isOpen={isMetadataSidebarOpen}
+            onClose={() => setIsMetadataSidebarOpen(false)}
+            toggles={metadataToggles}
+            onToggleChange={handleToggleChange}
+          />
+        )}
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          <Page
+            mainContainerId={pageId}
+            masthead={masthead}
+            skipToContent={PageSkipToContent}
+          >
+            {children}
+          </Page>
+        </div>
+      </div>
+    </MetadataProvider>
   );
 };
 

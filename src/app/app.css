@@ -340,25 +340,56 @@ html.lofi-wireframe,
   color: #ffffff !important;
 }
 
-/* Override any hover states to use gray */
-.lofi-wireframe :hover {
+/* Override any hover states to use gray - but exclude switches and interactive controls */
+.lofi-wireframe :hover:not(.pf-v6-c-switch):not(.pf-v6-c-switch__toggle):not(.pf-v6-c-switch__input):not(.pf-v6-c-switch__label):not([class*="switch"]) {
   background-color: inherit !important;
 }
 
-.lofi-wireframe button:hover,
+.lofi-wireframe button:hover:not([class*="switch"]),
 .lofi-wireframe a:hover,
-.lofi-wireframe [role="button"]:hover {
+.lofi-wireframe [role="button"]:hover:not([class*="switch"]) {
   background-color: #f0f0f0 !important;
 }
 
-/* Ensure all text is black */
+/* Ensure all text is black - but don't affect switch internal elements */
 .lofi-wireframe p, 
-.lofi-wireframe span, 
-.lofi-wireframe div, 
+.lofi-wireframe span:not([class*="switch"]), 
+.lofi-wireframe div:not([class*="switch"]), 
 .lofi-wireframe li, 
 .lofi-wireframe td, 
 .lofi-wireframe th {
   color: #000000 !important;
+}
+
+/* Preserve switch styling - make switches visible and functional */
+.lofi-wireframe .pf-v6-c-switch__toggle {
+  background-color: #f0f0f0 !important;
+  border: 1px solid #000000 !important;
+}
+
+.lofi-wireframe .pf-v6-c-switch__toggle::before {
+  background-color: #ffffff !important;
+  border: 1px solid #000000 !important;
+}
+
+.lofi-wireframe .pf-v6-c-switch__input:checked ~ .pf-v6-c-switch__toggle {
+  background-color: #000000 !important;
+  border: 1px solid #000000 !important;
+}
+
+.lofi-wireframe .pf-v6-c-switch__input:checked ~ .pf-v6-c-switch__toggle::before {
+  background-color: #ffffff !important;
+  border: 1px solid #000000 !important;
+}
+
+/* Prevent switches from becoming invisible on hover */
+.lofi-wireframe .pf-v6-c-switch:hover .pf-v6-c-switch__toggle,
+.lofi-wireframe .pf-v6-c-switch__toggle:hover {
+  background-color: #e0e0e0 !important;
+}
+
+.lofi-wireframe .pf-v6-c-switch__input:checked ~ .pf-v6-c-switch__toggle:hover {
+  background-color: #333333 !important;
 }
 
 /* Remove borders from internal layout elements */

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMetadata } from '@app/MetadataContext/MetadataContext';
 import {
   PageSection,
   PageSectionVariants,
@@ -42,6 +43,7 @@ import {
 interface SoftwareItem {
   id: string;
   name: string;
+  version: string;
   description: string;
   logo: string;
   tags: string[];
@@ -56,6 +58,7 @@ const mockSoftware: SoftwareItem[] = [
   {
     id: '1',
     name: 'CLICKME',
+    version: '1.1.0',
     description: 'All-in-one resource management and optimization platform for Kubernetes',
     logo: '🟣',
     tags: ['Containerized application', 'DevOps'],
@@ -68,6 +71,7 @@ const mockSoftware: SoftwareItem[] = [
   {
     id: '2',
     name: 'hummingbird/image/FIPS',
+    version: '2.3.1',
     description: 'LINSTOR® is open-source software designed to manage block storage devices for large Linux server clusters.',
     logo: '🟠',
     tags: ['Containerized application', 'Storage'],
@@ -80,6 +84,7 @@ const mockSoftware: SoftwareItem[] = [
   {
     id: '3',
     name: 'hummingbird/image',
+    version: '1.0.5',
     description: 'Windows Machine Config Operator is an operator providing the ability to run Windows compute nodes in an OpenShift Container Platform cluster.',
     logo: '🔴',
     tags: ['Containerized application', 'OS & platforms'],
@@ -91,6 +96,7 @@ const mockSoftware: SoftwareItem[] = [
   {
     id: '4',
     name: 'hummingbird/image/FIPS',
+    version: '3.2.0',
     description: 'Cloud Native Application Protection Platform by Palo Alto Networks',
     logo: '🔵',
     tags: ['Containerized application', 'Security'],
@@ -103,6 +109,7 @@ const mockSoftware: SoftwareItem[] = [
   {
     id: '5',
     name: 'hummingbird/image',
+    version: '1.8.2',
     description: 'A framework for building Kubernetes operators',
     logo: '⚪',
     tags: ['Containerized application', 'DevOps'],
@@ -114,6 +121,7 @@ const mockSoftware: SoftwareItem[] = [
   {
     id: '6',
     name: 'hummingbird/image/FIPS',
+    version: '2.5.4',
     description: 'Open-source systems monitoring and alerting toolkit',
     logo: '🔴',
     tags: ['Containerized application', 'Monitoring'],
@@ -127,6 +135,7 @@ const mockSoftware: SoftwareItem[] = [
 
 const Catalog: React.FunctionComponent = () => {
   const navigate = useNavigate();
+  const { metadataToggles } = useMetadata();
   const [selectedType, setSelectedType] = React.useState<string[]>(['Containerized application']);
   const [selectedDeployment, setSelectedDeployment] = React.useState<string[]>([]);
   const [providerSearch, setProviderSearch] = React.useState('');
@@ -549,9 +558,93 @@ const Catalog: React.FunctionComponent = () => {
         </div>
       </PageSection>
       <PageSection style={{ paddingTop: '0' }}>
-        <Sidebar>
-          <SidebarPanel>{sidebar}</SidebarPanel>
-          <SidebarContent>
+        {metadataToggles.filtering ? (
+          <Sidebar>
+            <SidebarPanel>{sidebar}</SidebarPanel>
+            <SidebarContent>
+              <Grid hasGutter>
+                {displayedSoftware.map((item) => (
+                  <GridItem key={item.id} span={viewMode === 'grid' ? 6 : 12}>
+                    <Card
+                      isClickable={item.name === 'CLICKME'}
+                      onClick={() => {
+                        if (item.name === 'CLICKME') {
+                          navigate(`/detail/${encodeURIComponent(item.name)}`);
+                        }
+                      }}
+                      style={{ cursor: item.name === 'CLICKME' ? 'pointer' : 'default' }}
+                    >
+                      <CardHeader>
+                        <Split>
+                          <SplitItem>
+                            <span style={{ fontSize: '1.25rem', marginRight: '1rem' }}>{item.logo}</span>
+                          </SplitItem>
+                          <SplitItem isFilled>
+                            <div>
+                              <CardTitle style={item.name === 'CLICKME' ? { color: '#0066cc', textDecoration: 'underline' } : undefined}>
+                                {item.name} {item.version}
+                              </CardTitle>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                        <span>
+                          <ThIcon style={{ marginRight: '0.25rem' }} />
+                          {item.provider}
+                        </span>
+                        {item.fipsStatus && (
+                          <Badge><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>{item.fipsStatus}</span></Badge>
+                        )}
+                              </div>
+                            </div>
+                          </SplitItem>
+                          <SplitItem>
+                            <Button variant="plain" aria-label="Add to favorites">
+                              <StarIcon />
+                            </Button>
+                          </SplitItem>
+                        </Split>
+                      </CardHeader>
+                      <CardBody>{item.description}</CardBody>
+                      <CardFooter>
+                        <div style={{ display: 'flex', gap: '1rem' }}>
+                      <span>
+                        <ClockIcon style={{ marginRight: '0.25rem' }} />
+                        Published {item.published}
+                      </span>
+                      <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
+                        <ClockIcon style={{ marginRight: '0.25rem' }} />
+                        Updated {item.updated}
+                      </span>
+                      <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
+                        <ClockIcon style={{ marginRight: '0.25rem' }} />
+                        Scanned {item.scanned}
+                      </span>
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </GridItem>
+                ))}
+              </Grid>
+              <div style={{ marginTop: '2rem' }}>
+                <Pagination
+                  itemCount={totalResults}
+                  page={currentPage}
+                  perPage={perPage}
+                  onSetPage={(_, page) => setCurrentPage(page)}
+                  onPerPageSelect={(_, perPage) => {
+                    setPerPage(perPage);
+                    setCurrentPage(1);
+                  }}
+                  perPageOptions={[
+                    { title: '20', value: 20 },
+                    { title: '50', value: 50 },
+                    { title: '100', value: 100 },
+                  ]}
+                  widgetId="pagination-bottom"
+                />
+              </div>
+            </SidebarContent>
+          </Sidebar>
+        ) : (
+          <>
             <Grid hasGutter>
               {displayedSoftware.map((item) => (
                 <GridItem key={item.id} span={viewMode === 'grid' ? 6 : 12}>
@@ -572,7 +665,7 @@ const Catalog: React.FunctionComponent = () => {
                         <SplitItem isFilled>
                           <div>
                             <CardTitle style={item.name === 'CLICKME' ? { color: '#0066cc', textDecoration: 'underline' } : undefined}>
-                              {item.name}
+                              {item.name} {item.version}
                             </CardTitle>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
                               <span>
@@ -580,7 +673,7 @@ const Catalog: React.FunctionComponent = () => {
                                 {item.provider}
                               </span>
                               {item.fipsStatus && (
-                                <Badge><span className="highlighter">{item.fipsStatus}</span></Badge>
+                                <Badge><span className={metadataToggles?.highlightsActive ? "highlighter" : ""}>{item.fipsStatus}</span></Badge>
                               )}
                             </div>
                           </div>
@@ -599,11 +692,11 @@ const Catalog: React.FunctionComponent = () => {
                           <ClockIcon style={{ marginRight: '0.25rem' }} />
                           Published {item.published}
                         </span>
-                        <span className="highlighter">
+                        <span className={metadataToggles?.highlightsActive ? "highlighter" : ""}>
                           <ClockIcon style={{ marginRight: '0.25rem' }} />
                           Updated {item.updated}
                         </span>
-                        <span className="highlighter">
+                        <span className={metadataToggles?.highlightsActive ? "highlighter" : ""}>
                           <ClockIcon style={{ marginRight: '0.25rem' }} />
                           Scanned {item.scanned}
                         </span>
@@ -631,8 +724,8 @@ const Catalog: React.FunctionComponent = () => {
                 widgetId="pagination-bottom"
               />
             </div>
-          </SidebarContent>
-        </Sidebar>
+          </>
+        )}
       </PageSection>
     </>
   );

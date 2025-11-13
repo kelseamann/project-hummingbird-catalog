@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
+import { useMetadata } from '@app/MetadataContext/MetadataContext';
 import {
   PageSection,
   PageSectionVariants,
@@ -25,11 +26,14 @@ import {
   FormGroup,
   Label,
   ProgressBar,
+  Breadcrumb,
+  BreadcrumbItem,
 } from '@patternfly/react-core';
 import { ClockIcon, ThIcon } from '@patternfly/react-icons';
 
 const DetailPage: React.FunctionComponent = () => {
   const { name } = useParams<{ name: string }>();
+  const { metadataToggles } = useMetadata();
   const displayName = name || 'Image';
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
 
@@ -48,8 +52,12 @@ const DetailPage: React.FunctionComponent = () => {
   return (
     <>
       <PageSection variant={PageSectionVariants.default}>
+        <Breadcrumb style={{ marginBottom: '1rem' }}>
+          <BreadcrumbItem to="/">Hummingbird Images</BreadcrumbItem>
+          <BreadcrumbItem isActive>{displayName}</BreadcrumbItem>
+        </Breadcrumb>
         <Title headingLevel="h1" size="2xl">
-          {displayName}
+          {displayName} 1.1.0
         </Title>
         <div style={{ marginTop: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
@@ -57,27 +65,27 @@ const DetailPage: React.FunctionComponent = () => {
               <ThIcon style={{ marginRight: '0.25rem' }} />
               {itemData.provider}
             </span>
-            {itemData.fipsStatus && (
-              <Badge><span className="highlighter">{itemData.fipsStatus}</span></Badge>
-            )}
+                  {itemData.fipsStatus && (
+                    <Badge><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>{itemData.fipsStatus}</span></Badge>
+                  )}
           </div>
           <div style={{ display: 'flex', gap: '1rem' }}>
-            <span>
-              <ClockIcon style={{ marginRight: '0.25rem' }} />
-              Published {itemData.published}
-            </span>
-            <span className="highlighter">
-              <ClockIcon style={{ marginRight: '0.25rem' }} />
-              Updated {itemData.updated}
-            </span>
-            <span className="highlighter">
-              <ClockIcon style={{ marginRight: '0.25rem' }} />
-              Scanned {itemData.scanned}
-            </span>
+                  <span>
+                    <ClockIcon style={{ marginRight: '0.25rem' }} />
+                    Published {itemData.published}
+                  </span>
+                  <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
+                    <ClockIcon style={{ marginRight: '0.25rem' }} />
+                    Updated {itemData.updated}
+                  </span>
+                  <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
+                    <ClockIcon style={{ marginRight: '0.25rem' }} />
+                    Scanned {itemData.scanned}
+                  </span>
           </div>
         </div>
       </PageSection>
-      <PageSection style={{ paddingTop: '0' }}>
+      <PageSection style={{ paddingTop: '0', position: 'sticky', top: 0, zIndex: 100, backgroundColor: '#ffffff' }}>
         <Card>
           <CardHeader>
             <CardTitle>Start using this image</CardTitle>
@@ -124,47 +132,7 @@ const DetailPage: React.FunctionComponent = () => {
             {/* Overview content - to be filled in later */}
           </Tab>
           <Tab eventKey={1} title={<TabTitleText>Security</TabTitleText>}>
-            <Card style={{ marginTop: '1rem' }}>
-              <CardHeader>
-                <CardTitle>Latest CVEs</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div style={{ marginBottom: '1.5rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                    <span style={{ fontWeight: 'bold' }}>Critical</span>
-                    <span>2</span>
-                  </div>
-                  <ProgressBar value={20} style={{ height: '20px', backgroundColor: '#c9190b' }} />
-                </div>
-                <div style={{ marginBottom: '1.5rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                    <span style={{ fontWeight: 'bold' }}>High</span>
-                    <span>5</span>
-                  </div>
-                  <ProgressBar value={50} style={{ height: '20px', backgroundColor: '#ec7a08' }} />
-                </div>
-                <div style={{ marginBottom: '1.5rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                    <span style={{ fontWeight: 'bold' }}>Medium</span>
-                    <span>8</span>
-                  </div>
-                  <ProgressBar value={80} style={{ height: '20px', backgroundColor: '#f0ab00' }} />
-                </div>
-                <div style={{ marginBottom: '1.5rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                    <span style={{ fontWeight: 'bold' }}>Low</span>
-                    <span>3</span>
-                  </div>
-                  <ProgressBar value={30} style={{ height: '20px', backgroundColor: '#2b9af3' }} />
-                </div>
-                <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #d2d2d2' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontWeight: 'bold' }}>Total CVEs:</span>
-                    <span>18</span>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
+            {/* Security content - to be filled in later */}
           </Tab>
           <Tab eventKey={2} title={<TabTitleText>Packages</TabTitleText>}>
             {/* Packages content - to be filled in later */}
@@ -195,6 +163,52 @@ const DetailPage: React.FunctionComponent = () => {
           </SidebarPanel>
           <SidebarContent>
             <Grid hasGutter>
+              {/* Latest CVEs card - only show in Security tab */}
+              {activeTabKey === 1 && (
+                <GridItem span={12}>
+                  <Card>
+                    <CardHeader>
+                        <CardTitle><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>Latest CVEs</span></CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <div style={{ marginBottom: '1.5rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                          <span style={{ fontWeight: 'bold' }}>Critical</span>
+                          <span>2</span>
+                        </div>
+                        <ProgressBar value={20} style={{ height: '20px', backgroundColor: '#c9190b' }} />
+                      </div>
+                      <div style={{ marginBottom: '1.5rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                          <span style={{ fontWeight: 'bold' }}>High</span>
+                          <span>5</span>
+                        </div>
+                        <ProgressBar value={50} style={{ height: '20px', backgroundColor: '#ec7a08' }} />
+                      </div>
+                      <div style={{ marginBottom: '1.5rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                          <span style={{ fontWeight: 'bold' }}>Medium</span>
+                          <span>8</span>
+                        </div>
+                        <ProgressBar value={80} style={{ height: '20px', backgroundColor: '#f0ab00' }} />
+                      </div>
+                      <div style={{ marginBottom: '1.5rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                          <span style={{ fontWeight: 'bold' }}>Low</span>
+                          <span>3</span>
+                        </div>
+                        <ProgressBar value={30} style={{ height: '20px', backgroundColor: '#2b9af3' }} />
+                      </div>
+                      <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #d2d2d2' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span style={{ fontWeight: 'bold' }}>Total CVEs:</span>
+                          <span>18</span>
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </GridItem>
+              )}
               {/* Empty content section cards */}
               {contentSections.map((_, index) => (
                 <GridItem key={`content-${index}`} span={12}>
