@@ -189,7 +189,7 @@ const DetailPage: React.FunctionComponent = () => {
                   <Button
                     variant="link"
                     isInline
-                    onClick={() => setActiveTabKey(2)}
+                    onClick={() => setActiveTabKey(1)}
                   >
                     <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>View SBOM</span>
                   </Button>
@@ -205,18 +205,15 @@ const DetailPage: React.FunctionComponent = () => {
           onSelect={(_event, tabIndex) => setActiveTabKey(tabIndex)}
           aria-label="Detail tabs"
         >
-          <Tab eventKey={0} title={<TabTitleText>Overview</TabTitleText>}>
-            {/* Overview content - to be filled in later */}
-          </Tab>
-          <Tab eventKey={1} title={<TabTitleText>Security</TabTitleText>}>
+          <Tab eventKey={0} title={<TabTitleText>Security</TabTitleText>}>
             {/* Security content - to be filled in later */}
           </Tab>
           {metadataToggles.sbom && (
-            <Tab eventKey={2} title={<TabTitleText><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>SBOM</span></TabTitleText>}>
+            <Tab eventKey={1} title={<TabTitleText><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>SBOM</span></TabTitleText>}>
               {/* SBOM content - to be filled in later */}
             </Tab>
           )}
-          <Tab eventKey={3} title={<TabTitleText>Get this image</TabTitleText>}>
+          <Tab eventKey={2} title={<TabTitleText>Get this image</TabTitleText>}>
             {/* Get this image content - to be filled in later */}
           </Tab>
         </Tabs>
@@ -225,44 +222,28 @@ const DetailPage: React.FunctionComponent = () => {
         <Sidebar hasGutter>
           <SidebarPanel>
             <JumpLinks isVertical label="Jump to section">
-              {activeTabKey === 1 ? (
+              {activeTabKey === 0 ? (
                 <>
                   {metadataToggles.zeroCVEs && (
                     <JumpLinksItem href="#cves">Latest CVEs</JumpLinksItem>
                   )}
                   <JumpLinksItem href="#attestation">Attestation</JumpLinksItem>
                 </>
-              ) : metadataToggles.sbom && activeTabKey === 2 ? (
+              ) : metadataToggles.sbom && activeTabKey === 1 ? (
                 <>
                   <JumpLinksItem href="#sbom"><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>Software Bill of Materials</span></JumpLinksItem>
                 </>
-              ) : (
+              ) : activeTabKey === 2 ? (
                 <>
-                  <JumpLinksItem href="#description">Description</JumpLinksItem>
-                  <JumpLinksItem href="#overview">Overview</JumpLinksItem>
-                  <JumpLinksItem href="#security">Security</JumpLinksItem>
                   <JumpLinksItem href="#get-this-image">Get this image</JumpLinksItem>
                 </>
-              )}
+              ) : null}
             </JumpLinks>
           </SidebarPanel>
           <SidebarContent>
             <Grid hasGutter>
-              {/* Description card - only show in Overview tab */}
-              {activeTabKey === 0 && (
-                <GridItem span={12}>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Description</CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    </CardBody>
-                  </Card>
-                </GridItem>
-              )}
-              {/* Packages table - only show in Packages tab */}
-              {metadataToggles.sbom && activeTabKey === 2 && (
+              {/* Packages table - only show in SBOM tab */}
+              {metadataToggles.sbom && activeTabKey === 1 && (
                 <GridItem span={12}>
                   <Card>
                     <CardHeader>
@@ -327,7 +308,7 @@ const DetailPage: React.FunctionComponent = () => {
                 </GridItem>
               )}
               {/* Latest CVEs card - only show in Security tab */}
-              {activeTabKey === 1 && metadataToggles.zeroCVEs && (
+              {activeTabKey === 0 && metadataToggles.zeroCVEs && (
                 <GridItem span={12}>
                   <Card>
                     <CardHeader>
