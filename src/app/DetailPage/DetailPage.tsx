@@ -176,7 +176,7 @@ const DetailPage: React.FunctionComponent = () => {
             <GridItem span={6}>
               <Card>
                 <CardHeader>
-                  <CardTitle>Download SBOM</CardTitle>
+                  <CardTitle><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>Download SBOM</span></CardTitle>
                 </CardHeader>
                 <CardBody>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
@@ -191,7 +191,7 @@ const DetailPage: React.FunctionComponent = () => {
                     isInline
                     onClick={() => setActiveTabKey(2)}
                   >
-                    View SBOM
+                    <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>View SBOM</span>
                   </Button>
                 </CardBody>
               </Card>
