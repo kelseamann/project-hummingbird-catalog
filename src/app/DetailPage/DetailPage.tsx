@@ -134,13 +134,13 @@ const DetailPage: React.FunctionComponent = () => {
         </div>
       </PageSection>
       <PageSection style={{ paddingTop: '0' }}>
-        <Card>
-          <CardBody>
-            <Grid hasGutter>
-              <GridItem span={6}>
-                <Title headingLevel="h3" size="md" style={{ marginBottom: '1rem' }}>
-                  Start using this image
-                </Title>
+        <Grid hasGutter>
+          <GridItem span={metadataToggles.sbom ? 6 : 12}>
+            <Card>
+              <CardHeader>
+                <CardTitle>Start using this image</CardTitle>
+              </CardHeader>
+              <CardBody>
                 <FormGroup label="Docker pull command">
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <div style={{ minWidth: '400px' }}>
@@ -169,12 +169,16 @@ const DetailPage: React.FunctionComponent = () => {
                     <span>7.13 GiB</span>
                   </div>
                 </FormGroup>
-              </GridItem>
-              {metadataToggles.sbom && (
-                <GridItem span={6}>
-                  <Title headingLevel="h3" size="md" style={{ marginBottom: '1rem' }}>
-                    Download SBOM
-                  </Title>
+              </CardBody>
+            </Card>
+          </GridItem>
+          {metadataToggles.sbom && (
+            <GridItem span={6}>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Download SBOM</CardTitle>
+                </CardHeader>
+                <CardBody>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
                     <DownloadIcon style={{ fontSize: '1.5rem' }} />
                     <div>
@@ -189,11 +193,11 @@ const DetailPage: React.FunctionComponent = () => {
                   >
                     View SBOM
                   </Button>
-                </GridItem>
-              )}
-            </Grid>
-          </CardBody>
-        </Card>
+                </CardBody>
+              </Card>
+            </GridItem>
+          )}
+        </Grid>
       </PageSection>
       <PageSection style={{ paddingTop: '0' }}>
         <Tabs
