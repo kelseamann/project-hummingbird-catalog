@@ -122,6 +122,7 @@ const MetadataSidebar: React.FunctionComponent<MetadataSidebarProps> = ({
               label="SBOM"
               isChecked={toggles.sbom}
               onChange={(_, checked) => onToggleChange('sbom', checked)}
+              style={{ marginBottom: '0.5rem' }}
             />
           </div>
         )}
