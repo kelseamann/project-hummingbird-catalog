@@ -582,7 +582,7 @@ const Catalog: React.FunctionComponent = () => {
                           <SplitItem isFilled>
                             <div>
                               <CardTitle style={item.name === 'CLICKME' ? { color: '#0066cc', textDecoration: 'underline' } : undefined}>
-                                {item.name} {item.version}
+                                {item.name} {metadataToggles.versionNumber && <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>{item.version}</span>}
                               </CardTitle>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
                         {metadataToggles.distributorName && (
@@ -591,7 +591,7 @@ const Catalog: React.FunctionComponent = () => {
                             {item.provider}
                           </span>
                         )}
-                        {item.fipsStatus && (
+                        {metadataToggles.fipsChips && item.fipsStatus && (
                           <Badge><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>{item.fipsStatus}</span></Badge>
                         )}
                               </div>
@@ -609,18 +609,24 @@ const Catalog: React.FunctionComponent = () => {
                     <CardBody>{item.description}</CardBody>
                     <CardFooter>
                         <div style={{ display: 'flex', gap: '1rem' }}>
-                      <span>
-                        <ClockIcon style={{ marginRight: '0.25rem' }} />
-                        Published {item.published}
-                      </span>
-                      <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
-                        <ClockIcon style={{ marginRight: '0.25rem' }} />
-                        Updated {item.updated}
-                      </span>
-                      <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
-                        <ClockIcon style={{ marginRight: '0.25rem' }} />
-                        Scanned {item.scanned}
-                      </span>
+                      {metadataToggles.publishedTime && (
+                        <span>
+                          <ClockIcon style={{ marginRight: '0.25rem' }} />
+                          Published {item.published}
+                        </span>
+                      )}
+                      {metadataToggles.updatedTime && (
+                        <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
+                          <ClockIcon style={{ marginRight: '0.25rem' }} />
+                          Updated {item.updated}
+                        </span>
+                      )}
+                      {metadataToggles.scannedTime && (
+                        <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
+                          <ClockIcon style={{ marginRight: '0.25rem' }} />
+                          Scanned {item.scanned}
+                        </span>
+                      )}
                         </div>
                       </CardFooter>
                     </Card>
@@ -669,7 +675,7 @@ const Catalog: React.FunctionComponent = () => {
                         <SplitItem isFilled>
                           <div>
                             <CardTitle style={item.name === 'CLICKME' ? { color: '#0066cc', textDecoration: 'underline' } : undefined}>
-                              {item.name} <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>{item.version}</span>
+                              {item.name} {metadataToggles.versionNumber && <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>{item.version}</span>}
                             </CardTitle>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
                         {metadataToggles.distributorName && (
@@ -678,8 +684,8 @@ const Catalog: React.FunctionComponent = () => {
                             {item.provider}
                           </span>
                         )}
-                        {item.fipsStatus && (
-                          <Badge><span className={metadataToggles?.highlightsActive ? "highlighter" : ""}>{item.fipsStatus}</span></Badge>
+                        {metadataToggles.fipsChips && item.fipsStatus && (
+                          <Badge><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>{item.fipsStatus}</span></Badge>
                         )}
                             </div>
                           </div>
@@ -696,18 +702,24 @@ const Catalog: React.FunctionComponent = () => {
                     <CardBody>{item.description}</CardBody>
                     <CardFooter>
                       <div style={{ display: 'flex', gap: '1rem' }}>
-                        <span>
-                          <ClockIcon style={{ marginRight: '0.25rem' }} />
-                          Published {item.published}
-                        </span>
-                        <span className={metadataToggles?.highlightsActive ? "highlighter" : ""}>
-                          <ClockIcon style={{ marginRight: '0.25rem' }} />
-                          Updated {item.updated}
-                        </span>
-                        <span className={metadataToggles?.highlightsActive ? "highlighter" : ""}>
-                          <ClockIcon style={{ marginRight: '0.25rem' }} />
-                          Scanned {item.scanned}
-                        </span>
+                        {metadataToggles.publishedTime && (
+                          <span>
+                            <ClockIcon style={{ marginRight: '0.25rem' }} />
+                            Published {item.published}
+                          </span>
+                        )}
+                        {metadataToggles.updatedTime && (
+                          <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
+                            <ClockIcon style={{ marginRight: '0.25rem' }} />
+                            Updated {item.updated}
+                          </span>
+                        )}
+                        {metadataToggles.scannedTime && (
+                          <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
+                            <ClockIcon style={{ marginRight: '0.25rem' }} />
+                            Scanned {item.scanned}
+                          </span>
+                        )}
                       </div>
                     </CardFooter>
                   </Card>

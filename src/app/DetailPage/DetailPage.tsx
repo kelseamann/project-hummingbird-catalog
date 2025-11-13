@@ -95,31 +95,39 @@ const DetailPage: React.FunctionComponent = () => {
           <BreadcrumbItem isActive>{displayName}</BreadcrumbItem>
         </Breadcrumb>
         <Title headingLevel="h1" size="2xl">
-          {displayName} <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>1.1.0</span>
+          {displayName} {metadataToggles.versionNumber && <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>1.1.0</span>}
         </Title>
         <div style={{ marginTop: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-            <span>
-              <ThIcon style={{ marginRight: '0.25rem' }} />
-              {itemData.provider}
-            </span>
-                  {itemData.fipsStatus && (
-                    <Badge><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>{itemData.fipsStatus}</span></Badge>
-                  )}
+            {metadataToggles.distributorName && (
+              <span>
+                <ThIcon style={{ marginRight: '0.25rem' }} />
+                {itemData.provider}
+              </span>
+            )}
+            {metadataToggles.fipsChips && itemData.fipsStatus && (
+              <Badge><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>{itemData.fipsStatus}</span></Badge>
+            )}
           </div>
           <div style={{ display: 'flex', gap: '1rem' }}>
-                  <span>
-                    <ClockIcon style={{ marginRight: '0.25rem' }} />
-                    Published {itemData.published}
-                  </span>
-                  <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
-                    <ClockIcon style={{ marginRight: '0.25rem' }} />
-                    Updated {itemData.updated}
-                  </span>
-                  <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
-                    <ClockIcon style={{ marginRight: '0.25rem' }} />
-                    Scanned {itemData.scanned}
-                  </span>
+            {metadataToggles.publishedTime && (
+              <span>
+                <ClockIcon style={{ marginRight: '0.25rem' }} />
+                Published {itemData.published}
+              </span>
+            )}
+            {metadataToggles.updatedTime && (
+              <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
+                <ClockIcon style={{ marginRight: '0.25rem' }} />
+                Updated {itemData.updated}
+              </span>
+            )}
+            {metadataToggles.scannedTime && (
+              <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>
+                <ClockIcon style={{ marginRight: '0.25rem' }} />
+                Scanned {itemData.scanned}
+              </span>
+            )}
           </div>
         </div>
       </PageSection>
@@ -172,9 +180,11 @@ const DetailPage: React.FunctionComponent = () => {
           <Tab eventKey={1} title={<TabTitleText>Security</TabTitleText>}>
             {/* Security content - to be filled in later */}
           </Tab>
-          <Tab eventKey={2} title={<TabTitleText><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>SBOM</span></TabTitleText>}>
-            {/* SBOM content - to be filled in later */}
-          </Tab>
+          {metadataToggles.sbom && (
+            <Tab eventKey={2} title={<TabTitleText><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>SBOM</span></TabTitleText>}>
+              {/* SBOM content - to be filled in later */}
+            </Tab>
+          )}
           <Tab eventKey={3} title={<TabTitleText>Get this image</TabTitleText>}>
             {/* Get this image content - to be filled in later */}
           </Tab>
@@ -189,7 +199,7 @@ const DetailPage: React.FunctionComponent = () => {
                   <JumpLinksItem href="#cves">Latest CVEs</JumpLinksItem>
                   <JumpLinksItem href="#attestation">Attestation</JumpLinksItem>
                 </>
-              ) : activeTabKey === 2 ? (
+              ) : metadataToggles.sbom && activeTabKey === 2 ? (
                 <>
                   <JumpLinksItem href="#sbom"><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>Software Bill of Materials</span></JumpLinksItem>
                 </>
@@ -219,7 +229,7 @@ const DetailPage: React.FunctionComponent = () => {
                 </GridItem>
               )}
               {/* Packages table - only show in Packages tab */}
-              {activeTabKey === 2 && (
+              {metadataToggles.sbom && activeTabKey === 2 && (
                 <GridItem span={12}>
                   <Card>
                     <CardHeader>
