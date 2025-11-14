@@ -3,20 +3,15 @@ import { MetadataSidebar, MetadataToggles } from '@app/MetadataSidebar/MetadataS
 import { MetadataProvider } from '@app/MetadataContext/MetadataContext';
 import { useLocation } from 'react-router-dom';
 import {
-  Button,
   Masthead,
   MastheadBrand,
   MastheadContent,
   MastheadMain,
-  Nav,
-  NavItem,
-  NavList,
   Page,
   SkipToContent,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
-  ToolbarGroup,
   SearchInput,
   Avatar,
   Dropdown,
@@ -24,7 +19,6 @@ import {
   DropdownList,
   MenuToggle,
 } from '@patternfly/react-core';
-import { BellIcon, QuestionCircleIcon, CogIcon, ThIcon } from '@patternfly/react-icons';
 
 interface IAppLayout {
   children: React.ReactNode;
@@ -34,7 +28,6 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const location = useLocation();
   const isDetailPage = location.pathname.startsWith('/detail/');
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
-  const [isSettingsMenuOpen, setIsSettingsMenuOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
   const [isMetadataSidebarOpen, setIsMetadataSidebarOpen] = React.useState(true);
   const [metadataToggles, setMetadataToggles] = React.useState<MetadataToggles>({
@@ -83,19 +76,6 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     </>
   );
 
-  const helpMenuItems = (
-    <>
-      <DropdownItem key="documentation">Documentation</DropdownItem>
-      <DropdownItem key="support">Support</DropdownItem>
-    </>
-  );
-
-  const settingsMenuItems = (
-    <>
-      <DropdownItem key="settings">Settings</DropdownItem>
-    </>
-  );
-
   const masthead = (
     <Masthead>
       <MastheadMain>
@@ -106,96 +86,41 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
       </MastheadMain>
       <MastheadContent>
         <Toolbar isFullHeight>
-          <ToolbarContent style={{ alignItems: 'center' }}>
-            <ToolbarItem>
-              <Nav variant="horizontal">
-                <NavList>
-                  <NavItem>Solutions</NavItem>
-                  <NavItem>Products</NavItem>
-                  <NavItem>Artifacts</NavItem>
-                  <NavItem>Partners</NavItem>
-                </NavList>
-              </Nav>
-            </ToolbarItem>
+          <ToolbarContent style={{ alignItems: 'center', gap: '1rem' }}>
             <ToolbarItem style={{ flex: '1 1 auto', minWidth: 0 }}>
               <SearchInput
                 placeholder="🔍 Search Ecosystem Catalog"
                 value={searchValue}
                 onChange={(_, value) => setSearchValue(value)}
                 onClear={() => setSearchValue('')}
-                style={{ width: '100%' }}
+                style={{ width: '100%', maxWidth: '600px' }}
               />
             </ToolbarItem>
-            <ToolbarGroup align={{ default: 'alignEnd' }}>
-              <ToolbarItem>
-                <Button variant="plain" aria-label="Favorites">
-                  <BellIcon />
-                </Button>
-              </ToolbarItem>
-              <ToolbarItem>
-                <Button variant="plain" aria-label="Contact us">
-                  <QuestionCircleIcon />
-                </Button>
-              </ToolbarItem>
-              <ToolbarItem>
-                <Button variant="plain" aria-label="Resources">
-                  <ThIcon />
-                </Button>
-              </ToolbarItem>
-              <ToolbarItem>
-                <Button 
-                  variant="plain" 
-                  aria-label="Toggle metadata sidebar"
-                  onClick={() => setIsMetadataSidebarOpen(!isMetadataSidebarOpen)}
-                >
-                  <BellIcon />
-                </Button>
-              </ToolbarItem>
-              <ToolbarItem>
-                <Dropdown
-                  isOpen={isSettingsMenuOpen}
-                  onSelect={() => setIsSettingsMenuOpen(false)}
-                  onOpenChange={(isOpen) => setIsSettingsMenuOpen(isOpen)}
-                  toggle={(toggleRef) => (
-                    <MenuToggle
-                      ref={toggleRef}
-                      variant="plain"
-                      onClick={() => setIsSettingsMenuOpen(!isSettingsMenuOpen)}
-                      aria-label="Settings"
-                    >
-                      <CogIcon />
-                    </MenuToggle>
-                  )}
-                >
-                  <DropdownList>{settingsMenuItems}</DropdownList>
-                </Dropdown>
-              </ToolbarItem>
-              <ToolbarItem>
-                <Dropdown
-                  isOpen={isUserMenuOpen}
-                  onSelect={() => setIsUserMenuOpen(false)}
-                  onOpenChange={(isOpen) => setIsUserMenuOpen(isOpen)}
-                  toggle={(toggleRef) => (
-                    <MenuToggle
-                      ref={toggleRef}
-                      variant="plain"
-                      onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                      aria-label="User menu"
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <Avatar
-                          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Ccircle cx='18' cy='18' r='18' fill='%23000000'/%3E%3C/svg%3E"
-                          alt="Kelsea"
-                        />
-                        <span>Kelsea</span>
-                      </div>
-                    </MenuToggle>
-                  )}
-                >
-                  <DropdownList>{userMenuItems}</DropdownList>
-                </Dropdown>
-              </ToolbarItem>
-            </ToolbarGroup>
+            <ToolbarItem>
+              <Dropdown
+                isOpen={isUserMenuOpen}
+                onSelect={() => setIsUserMenuOpen(false)}
+                onOpenChange={(isOpen) => setIsUserMenuOpen(isOpen)}
+                toggle={(toggleRef) => (
+                  <MenuToggle
+                    ref={toggleRef}
+                    variant="plain"
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    aria-label="User menu"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <Avatar
+                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Ccircle cx='18' cy='18' r='18' fill='%23000000'/%3E%3C/svg%3E"
+                        alt="Kelsea"
+                      />
+                      <span>Kelsea</span>
+                    </div>
+                  </MenuToggle>
+                )}
+              >
+                <DropdownList>{userMenuItems}</DropdownList>
+              </Dropdown>
+            </ToolbarItem>
           </ToolbarContent>
         </Toolbar>
       </MastheadContent>

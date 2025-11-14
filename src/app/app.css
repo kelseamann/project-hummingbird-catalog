@@ -125,7 +125,9 @@ html.lofi-wireframe,
 /* Remove any double borders from TextInput wrapper elements */
 .lofi-wireframe .pf-v6-c-text-input__group,
 .lofi-wireframe .pf-v6-c-text-input__group-main,
-.lofi-wireframe .pf-v6-c-form-control__group {
+.lofi-wireframe .pf-v6-c-form-control__group,
+.lofi-wireframe .pf-v6-c-search-input__bar,
+.lofi-wireframe .pf-v6-c-search-input__text-input {
   border: none !important;
   border-bottom: none !important;
   border-top: none !important;
@@ -135,6 +137,11 @@ html.lofi-wireframe,
 .lofi-wireframe .pf-v6-c-text-input__group input,
 .lofi-wireframe .pf-v6-c-form-control__group input {
   border: 1px solid #000000 !important;
+}
+
+/* SearchInput should only have one outer border */
+.lofi-wireframe .pf-v6-c-search-input__bar input {
+  border: none !important;
 }
 
 /* Remove borders from OUIA wrapper elements */
