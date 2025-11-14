@@ -86,8 +86,9 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
       </MastheadMain>
       <MastheadContent>
         <Toolbar isFullHeight>
-          <ToolbarContent style={{ alignItems: 'center', justifyContent: 'center', gap: '1rem', position: 'relative' }}>
-            <ToolbarItem style={{ flex: '0 1 auto' }}>
+          <ToolbarContent style={{ alignItems: 'center', display: 'flex', width: '100%' }}>
+            <ToolbarItem style={{ flex: '1 1 0', minWidth: 0 }} />
+            <ToolbarItem style={{ flex: '0 0 auto' }}>
               <SearchInput
                 placeholder="🔍 Search Ecosystem Catalog"
                 value={searchValue}
@@ -96,7 +97,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
                 style={{ width: '600px' }}
               />
             </ToolbarItem>
-            <ToolbarItem style={{ position: 'absolute', right: '0' }}>
+            <ToolbarItem style={{ flex: '1 1 0', minWidth: 0, display: 'flex', justifyContent: 'flex-end' }}>
               <Dropdown
                 isOpen={isUserMenuOpen}
                 onSelect={() => setIsUserMenuOpen(false)}

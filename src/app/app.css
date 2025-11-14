@@ -115,7 +115,13 @@ html.lofi-wireframe,
 .lofi-wireframe textarea,
 .lofi-wireframe select,
 .lofi-wireframe .pf-v6-c-form-control,
-.lofi-wireframe .pf-v6-c-text-input,
+.lofi-wireframe .pf-v6-c-text-input {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #000000 !important;
+}
+
+/* SearchInput - only outer container has border */
 .lofi-wireframe .pf-v6-c-search-input {
   background-color: #ffffff !important;
   color: #000000 !important;
@@ -127,21 +133,18 @@ html.lofi-wireframe,
 .lofi-wireframe .pf-v6-c-text-input__group-main,
 .lofi-wireframe .pf-v6-c-form-control__group,
 .lofi-wireframe .pf-v6-c-search-input__bar,
-.lofi-wireframe .pf-v6-c-search-input__text-input {
+.lofi-wireframe .pf-v6-c-search-input__text-input,
+.lofi-wireframe .pf-v6-c-search-input input,
+.lofi-wireframe .pf-v6-c-search-input__bar input,
+.lofi-wireframe .pf-v6-c-search-input .pf-v6-c-text-input {
   border: none !important;
-  border-bottom: none !important;
-  border-top: none !important;
+  background: transparent !important;
 }
 
-/* Ensure only the actual input element has a border */
+/* Ensure only the actual input element has a border for text inputs */
 .lofi-wireframe .pf-v6-c-text-input__group input,
 .lofi-wireframe .pf-v6-c-form-control__group input {
   border: 1px solid #000000 !important;
-}
-
-/* SearchInput should only have one outer border */
-.lofi-wireframe .pf-v6-c-search-input__bar input {
-  border: none !important;
 }
 
 /* Remove borders from OUIA wrapper elements */
