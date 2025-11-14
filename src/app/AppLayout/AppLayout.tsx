@@ -86,17 +86,17 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
       </MastheadMain>
       <MastheadContent>
         <Toolbar isFullHeight>
-          <ToolbarContent style={{ alignItems: 'center', gap: '1rem' }}>
-            <ToolbarItem style={{ flex: '1 1 auto', minWidth: 0 }}>
+          <ToolbarContent style={{ alignItems: 'center', justifyContent: 'center', gap: '1rem', position: 'relative' }}>
+            <ToolbarItem style={{ flex: '0 1 auto' }}>
               <SearchInput
                 placeholder="🔍 Search Ecosystem Catalog"
                 value={searchValue}
                 onChange={(_, value) => setSearchValue(value)}
                 onClear={() => setSearchValue('')}
-                style={{ width: '100%', maxWidth: '600px' }}
+                style={{ width: '600px' }}
               />
             </ToolbarItem>
-            <ToolbarItem>
+            <ToolbarItem style={{ position: 'absolute', right: '0' }}>
               <Dropdown
                 isOpen={isUserMenuOpen}
                 onSelect={() => setIsUserMenuOpen(false)}
