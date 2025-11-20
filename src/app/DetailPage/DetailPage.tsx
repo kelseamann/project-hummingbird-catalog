@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 import { useMetadata } from '@app/MetadataContext/MetadataContext';
 import {
   PageSection,
@@ -28,26 +27,70 @@ import {
   ProgressBar,
   Breadcrumb,
   BreadcrumbItem,
-  SearchInput,
-  Pagination,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
   Button,
-  Divider,
+  Dropdown,
+  DropdownList,
+  DropdownItem,
+  MenuToggle,
+  MenuToggleElement,
+  Radio,
+  Checkbox,
 } from '@patternfly/react-core';
-import { Table, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
-import { ClockIcon, ThIcon, DownloadIcon } from '@patternfly/react-icons';
+import { ClockIcon, ThIcon, DownloadIcon, CheckCircleIcon } from '@patternfly/react-icons';
 
 const DetailPage: React.FunctionComponent = () => {
-  const { name } = useParams<{ name: string }>();
   const { metadataToggles } = useMetadata();
-  const displayName = name || 'Image';
+  const displayName = 'NGINX';
   const [activeTabKey, setActiveTabKey] = React.useState<string | number>(0);
   const [minutesAgo, setMinutesAgo] = React.useState(0);
-  const [packageSearchValue, setPackageSearchValue] = React.useState('');
-  const [packagePage, setPackagePage] = React.useState(1);
-  const [packagePerPage, setPackagePerPage] = React.useState(10);
+  
+  // Image configuration state
+  const [tagDropdownOpen, setTagDropdownOpen] = React.useState(false);
+  const [selectedTag, setSelectedTag] = React.useState('latest');
+  const [complianceLevel, setComplianceLevel] = React.useState('fips-stig');
+  const [includePackageManager, setIncludePackageManager] = React.useState(false);
+  const [includeShell, setIncludeShell] = React.useState(false);
+
+  // Handle tag changes
+  const handleTagChange = (tag: string) => {
+    setSelectedTag(tag);
+    if (tag === 'latest-builder') {
+      setIncludePackageManager(true);
+      setIncludeShell(true);
+    } else if (tag === 'latest') {
+      setIncludePackageManager(false);
+      setIncludeShell(false);
+    }
+  };
+
+  // Handle checkbox changes
+  const handlePackageManagerChange = (checked: boolean) => {
+    setIncludePackageManager(checked);
+    if (checked && selectedTag === 'latest') {
+      setSelectedTag('latest-builder');
+    } else if (!checked && !includeShell && selectedTag === 'latest-builder') {
+      setSelectedTag('latest');
+    }
+  };
+
+  const handleShellChange = (checked: boolean) => {
+    setIncludeShell(checked);
+    if (checked && selectedTag === 'latest') {
+      setSelectedTag('latest-builder');
+    } else if (!checked && !includePackageManager && selectedTag === 'latest-builder') {
+      setSelectedTag('latest');
+    }
+  };
+
+  // Generate the image tag suffix
+  const imageTag = selectedTag;
+
+  // Get display name for tag
+  const getTagDisplayName = (tag: string) => {
+    if (tag === 'latest') return 'Latest';
+    if (tag === 'latest-builder') return 'Latest builder';
+    return tag;
+  };
 
   // Count up minutes since page load
   React.useEffect(() => {
@@ -67,40 +110,18 @@ const DetailPage: React.FunctionComponent = () => {
     fipsStatus: 'FIPS available' as const,
   };
 
-  // Mock package data - simulating a larger list
-  const allPackages = Array.from({ length: 50 }, (_, i) => ({
-    name: `package${i + 1}`,
-    version: `${Math.floor(Math.random() * 5)}.${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 10)}`,
-    size: `${(Math.random() * 10 + 1).toFixed(1)} MB`,
-    license: ['MIT', 'Apache 2.0', 'BSD', 'GPL'][Math.floor(Math.random() * 4)],
-  }));
-
-  // Filter packages based on search
-  const filteredPackages = allPackages.filter(pkg => 
-    pkg.name.toLowerCase().includes(packageSearchValue.toLowerCase())
-  );
-
-  // Paginate packages
-  const paginatedPackages = filteredPackages.slice(
-    (packagePage - 1) * packagePerPage,
-    packagePage * packagePerPage
-  );
-
-  // Empty content section cards
-  const contentSections = Array(6).fill(null);
-
   return (
     <>
-      <PageSection variant={PageSectionVariants.default}>
-        <Breadcrumb style={{ marginBottom: '1rem' }}>
+      <PageSection variant={PageSectionVariants.default} style={{ paddingBottom: '2rem' }}>
+        <Breadcrumb style={{ marginBottom: '2rem' }}>
           <BreadcrumbItem to="/">Hummingbird Images</BreadcrumbItem>
           <BreadcrumbItem isActive>{displayName}</BreadcrumbItem>
         </Breadcrumb>
-        <Title headingLevel="h1" size="2xl">
+        <Title headingLevel="h1" size="2xl" style={{ marginBottom: '1.5rem' }}>
           {displayName} {metadataToggles.versionNumber && <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>1.1.0</span>}
         </Title>
-        <div style={{ marginTop: '1rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+        <div style={{ marginTop: '2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
             {metadataToggles.distributorName && (
               <span>
                 <ThIcon style={{ marginRight: '0.25rem' }} />
@@ -111,7 +132,7 @@ const DetailPage: React.FunctionComponent = () => {
               <Badge><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>{itemData.fipsStatus}</span></Badge>
             )}
           </div>
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          <div style={{ display: 'flex', gap: '2rem' }}>
             {metadataToggles.publishedTime && (
               <span>
                 <ClockIcon style={{ marginRight: '0.25rem' }} />
@@ -133,7 +154,7 @@ const DetailPage: React.FunctionComponent = () => {
           </div>
         </div>
       </PageSection>
-      <PageSection style={{ paddingTop: '0' }}>
+      <PageSection style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
         <Grid hasGutter>
           <GridItem span={metadataToggles.sbom ? 6 : 12}>
             <Card>
@@ -141,32 +162,99 @@ const DetailPage: React.FunctionComponent = () => {
                 <CardTitle>Start using this image</CardTitle>
               </CardHeader>
               <CardBody>
-                <FormGroup label="Docker pull command">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{ minWidth: '400px' }}>
-                      <ClipboardCopy 
-                        isReadOnly 
-                        hoverTip="Copy" 
-                        clickTip="Copied"
-                      >
-                        docker pull quay.io/redhat/image-name
-                      </ClipboardCopy>
-                    </div>
-                    <span>7.13 GiB</span>
+                <div style={{ display: 'flex', gap: '4rem', marginBottom: '2rem' }}>
+                  <FormGroup label="Tag" style={{ minWidth: '200px' }}>
+                    <Dropdown
+                      isOpen={tagDropdownOpen}
+                      onSelect={() => setTagDropdownOpen(false)}
+                      onOpenChange={(isOpen: boolean) => setTagDropdownOpen(isOpen)}
+                      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                        <MenuToggle ref={toggleRef} onClick={() => setTagDropdownOpen(!tagDropdownOpen)} isExpanded={tagDropdownOpen}>
+                          {getTagDisplayName(selectedTag)}
+                        </MenuToggle>
+                      )}
+                    >
+                      <DropdownList>
+                        <DropdownItem value="latest" key="latest" onClick={() => handleTagChange('latest')}>
+                          Latest
+                        </DropdownItem>
+                        <DropdownItem value="latest-builder" key="latest-builder" onClick={() => handleTagChange('latest-builder')}>
+                          Latest builder
+                        </DropdownItem>
+                        <DropdownItem value="1.1.0" key="1.1.0" onClick={() => handleTagChange('1.1.0')}>
+                          1.1.0
+                        </DropdownItem>
+                        <DropdownItem value="1.0.0" key="1.0.0" onClick={() => handleTagChange('1.0.0')}>
+                          1.0.0
+                        </DropdownItem>
+                      </DropdownList>
+                    </Dropdown>
+                  </FormGroup>
+                  
+                  <div>
+                    <div style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>Compliance level</div>
+                    <Radio
+                      isChecked={complianceLevel === 'fips-stig'}
+                      onChange={() => setComplianceLevel('fips-stig')}
+                      label="FIPS and STIG"
+                      name="compliance"
+                      id="fips-stig"
+                    />
+                    <Radio
+                      isChecked={complianceLevel === 'cis'}
+                      onChange={() => setComplianceLevel('cis')}
+                      label="CIS Compliance"
+                      name="compliance"
+                      id="cis-compliance"
+                    />
+                  </div>
+                  
+                  <div>
+                    <div style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>Include</div>
+                    <Checkbox
+                      label="Package manager"
+                      isChecked={includePackageManager}
+                      onChange={(_event, checked) => handlePackageManagerChange(checked)}
+                      id="package-manager"
+                    />
+                    <Checkbox
+                      label="Shell"
+                      isChecked={includeShell}
+                      onChange={(_event, checked) => handleShellChange(checked)}
+                      id="shell"
+                    />
+                  </div>
+                </div>
+
+                <FormGroup label="Docker pull command" style={{ marginBottom: '2rem' }}>
+                  <ClipboardCopy 
+                    isReadOnly 
+                    hoverTip="Copy" 
+                    clickTip="Copied"
+                  >
+                    {`docker pull --quay.io/hummingbird/python:${imageTag}`}
+                  </ClipboardCopy>
+                  <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', color: '#6a6e73' }}>
+                    <span>— Compressed size: 1.3MB</span>
+                  </div>
+                  <div style={{ color: '#6a6e73' }}>
+                    <span>— Architecture: aarch64, arm64, x86_64</span>
                   </div>
                 </FormGroup>
-                <FormGroup label="Podman pull command" style={{ marginTop: '1rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{ minWidth: '400px' }}>
-                      <ClipboardCopy 
-                        isReadOnly 
-                        hoverTip="Copy" 
-                        clickTip="Copied"
-                      >
-                        podman pull quay.io/redhat/image-name
-                      </ClipboardCopy>
-                    </div>
-                    <span>7.13 GiB</span>
+
+                <FormGroup label="Podman pull command">
+                  <ClipboardCopy 
+                    isReadOnly 
+                    hoverTip="Copy" 
+                    clickTip="Copied"
+                  >
+                    {`podman pull --quay.io/hummingbird/python:${imageTag}`}
+                  </ClipboardCopy>
+                  <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', color: '#6a6e73' }}>
+                    <span>— Compressed size: 1.3MB</span>
+                  </div>
+                  <div style={{ color: '#6a6e73' }}>
+                    <span>— Architecture: aarch64, arm64, x86_64</span>
                   </div>
                 </FormGroup>
               </CardBody>
@@ -179,7 +267,7 @@ const DetailPage: React.FunctionComponent = () => {
                   <CardTitle><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>Download SBOM</span></CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                     <DownloadIcon style={{ fontSize: '1.5rem' }} />
                     <div>
                       <div style={{ fontWeight: 'bold' }}>sbom-image-name.json</div>
@@ -189,7 +277,7 @@ const DetailPage: React.FunctionComponent = () => {
                   <Button
                     variant="link"
                     isInline
-                    onClick={() => setActiveTabKey(1)}
+                    onClick={() => setActiveTabKey(3)}
                   >
                     <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>View SBOM</span>
                   </Button>
@@ -199,215 +287,360 @@ const DetailPage: React.FunctionComponent = () => {
           )}
         </Grid>
       </PageSection>
-      <PageSection style={{ paddingTop: '0' }}>
+      <PageSection style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
         <Tabs
           activeKey={activeTabKey}
           onSelect={(_event, tabIndex) => setActiveTabKey(tabIndex)}
           aria-label="Detail tabs"
         >
-          <Tab eventKey={0} title={<TabTitleText>Security</TabTitleText>}>
-            {/* Security content - to be filled in later */}
+          <Tab eventKey={0} title={<TabTitleText>Image Details</TabTitleText>}>
+            {/* Image Details content */}
           </Tab>
-          {metadataToggles.sbom && (
-            <Tab eventKey={1} title={<TabTitleText><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>SBOM</span></TabTitleText>}>
-              {/* SBOM content - to be filled in later */}
-            </Tab>
-          )}
-          <Tab eventKey={2} title={<TabTitleText>Get this image</TabTitleText>}>
-            {/* Get this image content - to be filled in later */}
+          <Tab eventKey={1} title={<TabTitleText>Size</TabTitleText>}>
+            {/* Size content */}
+          </Tab>
+          <Tab eventKey={2} title={<TabTitleText>Updated</TabTitleText>}>
+            {/* Updated content */}
+          </Tab>
+          <Tab eventKey={3} title={<TabTitleText>Secure</TabTitleText>}>
+            {/* Secure content */}
           </Tab>
         </Tabs>
       </PageSection>
-      <PageSection>
-        <Sidebar hasGutter>
-          <SidebarPanel>
+      <PageSection style={{ paddingTop: '2rem' }}>
+        <div style={{ display: 'flex', gap: '2rem' }}>
+          {/* Left sidebar for jump links */}
+          <div style={{ 
+            width: '200px', 
+            flexShrink: 0,
+            position: 'sticky',
+            top: '1rem',
+            alignSelf: 'flex-start',
+            height: 'fit-content'
+          }}>
             <JumpLinks isVertical label="Jump to section">
               {activeTabKey === 0 ? (
                 <>
-                  {metadataToggles.zeroCVEs && (
-                    <JumpLinksItem href="#cves">Latest CVEs</JumpLinksItem>
-                  )}
-                  <JumpLinksItem href="#attestation">Attestation</JumpLinksItem>
+                  <JumpLinksItem href="#image-name">Image Name</JumpLinksItem>
+                  <JumpLinksItem href="#pull-commands">Pull Commands</JumpLinksItem>
+                  <JumpLinksItem href="#compatibility">Compatibility</JumpLinksItem>
+                  <JumpLinksItem href="#license">License</JumpLinksItem>
                 </>
-              ) : metadataToggles.sbom && activeTabKey === 1 ? (
+              ) : activeTabKey === 1 ? (
                 <>
-                  <JumpLinksItem href="#sbom"><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>Software Bill of Materials</span></JumpLinksItem>
+                  <JumpLinksItem href="#image-size">Image Size</JumpLinksItem>
+                  <JumpLinksItem href="#drop-in-replace">Drop-in Replace</JumpLinksItem>
+                  <JumpLinksItem href="#architecture">Architecture</JumpLinksItem>
+                  <JumpLinksItem href="#containerfile">Containerfile</JumpLinksItem>
+                  <JumpLinksItem href="#comparison">Image Comparison</JumpLinksItem>
                 </>
               ) : activeTabKey === 2 ? (
                 <>
-                  <JumpLinksItem href="#get-this-image">Get this image</JumpLinksItem>
+                  <JumpLinksItem href="#latest-update">Latest Update</JumpLinksItem>
+                  <JumpLinksItem href="#tags">Tags</JumpLinksItem>
+                  <JumpLinksItem href="#image-variants">Image Variants</JumpLinksItem>
+                </>
+              ) : activeTabKey === 3 ? (
+                <>
+                  <JumpLinksItem href="#cves"><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>CVEs</span></JumpLinksItem>
+                  <JumpLinksItem href="#sbom"><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>SBOM</span></JumpLinksItem>
+                  <JumpLinksItem href="#cosign">Cosign</JumpLinksItem>
+                  <JumpLinksItem href="#fips">FIPS</JumpLinksItem>
+                  <JumpLinksItem href="#stig">STIG</JumpLinksItem>
                 </>
               ) : null}
             </JumpLinks>
-          </SidebarPanel>
-          <SidebarContent>
+          </div>
+          
+          {/* Main content area */}
+          <div style={{ flex: 1 }}>
             <Grid hasGutter>
-              {/* Packages table - only show in SBOM tab */}
-              {metadataToggles.sbom && activeTabKey === 1 && (
-                <GridItem span={12}>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>Software Bill of Materials</span></CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                      <Toolbar>
-                        <ToolbarContent>
-                          <ToolbarItem style={{ flex: '1 1 auto', minWidth: 0 }}>
-                            <SearchInput
-                              placeholder="Search packages..."
-                              value={packageSearchValue}
-                              onChange={(_event, value) => {
-                                setPackageSearchValue(value);
-                                setPackagePage(1);
-                              }}
-                              onClear={() => {
-                                setPackageSearchValue('');
-                                setPackagePage(1);
-                              }}
-                              style={{ width: '100%' }}
-                            />
-                          </ToolbarItem>
-                        </ToolbarContent>
-                      </Toolbar>
-                      <div style={{ maxHeight: '500px', overflowY: 'auto', marginTop: '1rem' }}>
-                        <Table variant="compact">
-                          <Thead>
-                            <Tr>
-                              <Th>Package Name</Th>
-                              <Th>Version</Th>
-                              <Th>Size</Th>
-                              <Th>License</Th>
-                            </Tr>
-                          </Thead>
-                          <Tbody>
-                            {paginatedPackages.map((pkg, index) => (
-                              <Tr key={index}>
-                                <Td>{pkg.name}</Td>
-                                <Td>{pkg.version}</Td>
-                                <Td>{pkg.size}</Td>
-                                <Td>{pkg.license}</Td>
-                              </Tr>
-                            ))}
-                          </Tbody>
-                        </Table>
-                      </div>
-                      <Pagination
-                        itemCount={filteredPackages.length}
-                        page={packagePage}
-                        perPage={packagePerPage}
-                        onSetPage={(_event, pageNumber) => setPackagePage(pageNumber)}
-                        onPerPageSelect={(_event, newPerPage) => {
-                          setPackagePerPage(newPerPage);
-                          setPackagePage(1);
-                        }}
-                        variant="bottom"
-                        style={{ marginTop: '1rem' }}
-                      />
-                    </CardBody>
-                  </Card>
-                </GridItem>
-              )}
-              {/* Latest CVEs card - only show in Security tab */}
-              {activeTabKey === 0 && metadataToggles.zeroCVEs && (
-                <GridItem span={12}>
-                  <Card>
-                    <CardHeader>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <CardTitle><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>Latest CVEs</span></CardTitle>
-                        <span className={metadataToggles.highlightsActive ? "highlighter" : ""} style={{ fontSize: '0.875rem', color: '#6a6e73' }}>
-                          Scanned {minutesAgo} {minutesAgo === 1 ? 'minute' : 'minutes'} ago
-                        </span>
-                      </div>
-                    </CardHeader>
-                    <CardBody>
-                      <div style={{ marginBottom: '1.5rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                          <span style={{ fontWeight: 'bold', color: '#d2d2d2' }}>Critical</span>
-                          <span style={{ color: '#d2d2d2' }}>0</span>
-                        </div>
-                        <ProgressBar value={0} style={{ height: '20px', backgroundColor: '#d2d2d2' }} />
-                      </div>
-                      <div style={{ marginBottom: '1.5rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                          <span style={{ fontWeight: 'bold', color: '#d2d2d2' }}>High</span>
-                          <span style={{ color: '#d2d2d2' }}>0</span>
-                        </div>
-                        <ProgressBar value={0} style={{ height: '20px', backgroundColor: '#d2d2d2' }} />
-                      </div>
-                      <div style={{ marginBottom: '1.5rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                          <span style={{ fontWeight: 'bold', color: '#d2d2d2' }}>Medium</span>
-                          <span style={{ color: '#d2d2d2' }}>0</span>
-                        </div>
-                        <ProgressBar value={0} style={{ height: '20px', backgroundColor: '#d2d2d2' }} />
-                      </div>
-                      <div style={{ marginBottom: '1.5rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                          <span style={{ fontWeight: 'bold', color: '#d2d2d2' }}>Low</span>
-                          <span style={{ color: '#d2d2d2' }}>0</span>
-                        </div>
-                        <ProgressBar value={0} style={{ height: '20px', backgroundColor: '#d2d2d2' }} />
-                      </div>
-                      <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #d2d2d2' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span style={{ fontWeight: 'bold' }}>Total CVEs:</span>
-                          <span>0</span>
-                        </div>
-                      </div>
-                    </CardBody>
-                  </Card>
-                </GridItem>
-              )}
-              {/* Attestation card - only show in Security tab */}
+              {/* Image Details Tab (0) */}
               {activeTabKey === 0 && (
-                <GridItem span={12}>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Attestation</CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                      <Table variant="compact">
-                        <Thead>
-                          <Tr>
-                            <Th>Type</Th>
-                            <Th>Description</Th>
-                          </Tr>
-                        </Thead>
-                        <Tbody>
-                          <Tr>
-                            <Td>slsa.dev</Td>
-                            <Td></Td>
-                          </Tr>
-                          <Tr>
-                            <Td>apko.dev</Td>
-                            <Td></Td>
-                          </Tr>
-                          <Tr>
-                            <Td>spdx.dev</Td>
-                            <Td></Td>
-                          </Tr>
-                        </Tbody>
-                      </Table>
-                    </CardBody>
-                  </Card>
-                </GridItem>
+                <>
+                  <GridItem span={12} id="image-name">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Container Image Name</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <p style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>quay.io/redhat/{displayName.toLowerCase()}</p>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                  <GridItem span={12} id="pull-commands">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Pull Commands</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <FormGroup label="Podman pull command" style={{ marginBottom: '2rem' }}>
+                          <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
+                            podman pull quay.io/redhat/image-name
+                          </ClipboardCopy>
+                        </FormGroup>
+                        <FormGroup label="Docker pull command">
+                          <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
+                            docker pull quay.io/redhat/image-name
+                          </ClipboardCopy>
+                        </FormGroup>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                  <GridItem span={12} id="compatibility">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Compatibility</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <p>Compatible with Red Hat OpenShift Container Platform, Kubernetes, and other container orchestration platforms.</p>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                  <GridItem span={12} id="license">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>License</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <p>Apache License 2.0</p>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                </>
               )}
-              {/* Empty content section cards */}
-              {contentSections.map((_, index) => (
-                <GridItem key={`content-${index}`} span={12}>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Content section</CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                      {/* Empty for now - to be filled in later */}
-                    </CardBody>
-                  </Card>
-                </GridItem>
-              ))}
+              
+              {/* Size Tab (1) */}
+              {activeTabKey === 1 && (
+                <>
+                  <GridItem span={12} id="image-size">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Image Size</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>7.13 GiB</p>
+                        <p style={{ marginTop: '1rem', color: '#6a6e73' }}>Compressed size: 2.8 GiB</p>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                  <GridItem span={12} id="drop-in-replace">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Drop-in Replace for default:latest</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <p>This image can be used as a drop-in replacement for default:latest images.</p>
+                        <p style={{ marginTop: '1rem' }}>Simply update your Dockerfile or container configuration to reference this image instead.</p>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                  <GridItem span={12} id="architecture">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Architecture Information</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <div style={{ display: 'flex', gap: '2rem' }}>
+                          <Label>amd64</Label>
+                          <Label>arm64</Label>
+                          <Label>s390x</Label>
+                          <Label>ppc64le</Label>
+                        </div>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                  <GridItem span={12} id="containerfile">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Containerfile</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <Button variant="link" isInline>View Containerfile</Button>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                  <GridItem span={12} id="comparison">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Image Comparison Report (GitLab)</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <Button variant="link" isInline>View comparison report</Button>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                </>
+              )}
+              
+              {/* Updated Tab (2) */}
+              {activeTabKey === 2 && (
+                <>
+                  <GridItem span={12} id="latest-update">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Latest Update</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <p style={{ fontWeight: 'bold' }}>Date & Time: <span style={{ fontWeight: 'normal' }}>November 18, 2025 14:32 UTC</span></p>
+                        <p style={{ marginTop: '1rem', color: '#6a6e73' }}>Representing latest "x"</p>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                  <GridItem span={12} id="tags">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Available Tags</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+                          <Label color="blue">:latest</Label>
+                          <Label color="blue">:latest-builder</Label>
+                          <Label color="grey">:1.1.0</Label>
+                          <Label color="grey">:1.0.5</Label>
+                        </div>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                  <GridItem span={12} id="image-variants">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Image Variants</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <div style={{ marginBottom: '2rem' }}>
+                          <p style={{ fontWeight: 'bold' }}>:latest</p>
+                          <p style={{ color: '#6a6e73', marginTop: '0.5rem' }}>Default Go image (latest Go version)</p>
+                        </div>
+                        <div style={{ marginBottom: '2rem' }}>
+                          <p style={{ fontWeight: 'bold' }}>:latest-builder</p>
+                          <p style={{ color: '#6a6e73', marginTop: '0.5rem' }}>Includes package manager for building applications</p>
+                        </div>
+                        <div>
+                          <p style={{ fontWeight: 'bold' }}>-build</p>
+                          <p style={{ color: '#6a6e73', marginTop: '0.5rem' }}>Includes shell for debugging and development</p>
+                        </div>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                </>
+              )}
+              
+              {/* Secure Tab (3) */}
+              {activeTabKey === 3 && (
+                <>
+                  {metadataToggles.zeroCVEs && (
+                    <GridItem span={12} id="cves">
+                      <Card>
+                        <CardHeader>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <CardTitle><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>CVE Status</span></CardTitle>
+                            <span className={metadataToggles.highlightsActive ? "highlighter" : ""} style={{ fontSize: '0.875rem', color: '#6a6e73' }}>
+                              Scanned {minutesAgo} {minutesAgo === 1 ? 'minute' : 'minutes'} ago
+                            </span>
+                          </div>
+                        </CardHeader>
+                        <CardBody>
+                          <div style={{ marginBottom: '2.5rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                              <span style={{ fontWeight: 'bold', color: '#d2d2d2' }}>Critical</span>
+                              <span style={{ color: '#d2d2d2' }}>0</span>
+                            </div>
+                            <ProgressBar value={0} style={{ height: '20px', backgroundColor: '#d2d2d2' }} />
+                          </div>
+                          <div style={{ marginBottom: '2.5rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                              <span style={{ fontWeight: 'bold', color: '#d2d2d2' }}>High</span>
+                              <span style={{ color: '#d2d2d2' }}>0</span>
+                            </div>
+                            <ProgressBar value={0} style={{ height: '20px', backgroundColor: '#d2d2d2' }} />
+                          </div>
+                          <div style={{ marginBottom: '2.5rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                              <span style={{ fontWeight: 'bold', color: '#d2d2d2' }}>Medium</span>
+                              <span style={{ color: '#d2d2d2' }}>0</span>
+                            </div>
+                            <ProgressBar value={0} style={{ height: '20px', backgroundColor: '#d2d2d2' }} />
+                          </div>
+                          <div style={{ marginBottom: '2.5rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                              <span style={{ fontWeight: 'bold', color: '#d2d2d2' }}>Low</span>
+                              <span style={{ color: '#d2d2d2' }}>0</span>
+                            </div>
+                            <ProgressBar value={0} style={{ height: '20px', backgroundColor: '#d2d2d2' }} />
+                          </div>
+                          <div style={{ marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid #d2d2d2' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                              <span style={{ fontWeight: 'bold' }}>Total CVEs:</span>
+                              <span>0</span>
+                            </div>
+                          </div>
+                        </CardBody>
+                      </Card>
+                    </GridItem>
+                  )}
+                  {metadataToggles.sbom && (
+                    <GridItem span={12} id="sbom">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>Software Bill of Materials (SBOM)</span></CardTitle>
+                        </CardHeader>
+                        <CardBody>
+                          <Button variant="link" isInline>
+                            <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>View SBOM in-page</span>
+                          </Button>
+                          <p style={{ marginTop: '1rem', color: '#6a6e73' }}>Download SBOM: sbom-image-name.json (2.5 MB)</p>
+                        </CardBody>
+                      </Card>
+                    </GridItem>
+                  )}
+                  <GridItem span={12} id="cosign">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Cosign Instructions</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <p style={{ marginBottom: '1rem' }}>Verify the image signature using Cosign:</p>
+                        <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
+                          cosign verify quay.io/redhat/image-name:latest
+                        </ClipboardCopy>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                  {metadataToggles.fipsChips && (
+                    <GridItem span={12} id="fips">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>FIPS on this image</span>
+                              <CheckCircleIcon style={{ color: '#3E8635' }} />
+                            </div>
+                          </CardTitle>
+                        </CardHeader>
+                        <CardBody>
+                          <Badge><span className={metadataToggles.highlightsActive ? "highlighter" : ""}>FIPS available</span></Badge>
+                          <p style={{ marginTop: '1rem' }}>This image includes FIPS 140-2 validated cryptographic modules.</p>
+                        </CardBody>
+                      </Card>
+                    </GridItem>
+                  )}
+                  <GridItem span={12} id="stig">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>STIG Compliance</CardTitle>
+                      </CardHeader>
+                      <CardBody>
+                        <p>Security Technical Implementation Guide (STIG) compliance information.</p>
+                        <Button variant="link" isInline style={{ marginTop: '1rem' }}>View STIG report</Button>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                </>
+              )}
             </Grid>
-          </SidebarContent>
-        </Sidebar>
+          </div>
+        </div>
       </PageSection>
     </>
   );
