@@ -1,23 +1,11 @@
 import * as React from 'react';
-import { MetadataSidebar, MetadataToggles } from '@app/MetadataSidebar/MetadataSidebar';
+import { MetadataToggles } from '@app/MetadataSidebar/MetadataSidebar';
 import { MetadataProvider } from '@app/MetadataContext/MetadataContext';
 import { useLocation } from 'react-router-dom';
 import {
   Masthead,
   MastheadBrand,
-  MastheadContent,
   MastheadMain,
-  Page,
-  SkipToContent,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
-  SearchInput,
-  Avatar,
-  Dropdown,
-  DropdownItem,
-  DropdownList,
-  MenuToggle,
 } from '@patternfly/react-core';
 
 interface IAppLayout {
@@ -26,10 +14,8 @@ interface IAppLayout {
 
 const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const location = useLocation();
-  const isDetailPage = location.pathname.startsWith('/detail/');
-  const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
-  const [searchValue, setSearchValue] = React.useState('');
-  const [isMetadataSidebarOpen, setIsMetadataSidebarOpen] = React.useState(true);
+  const isMCPServersPage = location.pathname === '/mcp-servers';
+  const isDetailPage = location.pathname === '/';
   const [metadataToggles, setMetadataToggles] = React.useState<MetadataToggles>({
     // NEW section master toggle
     newSection: true,
@@ -68,101 +54,29 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     }
   };
 
-  const userMenuItems = (
-    <>
-      <DropdownItem key="profile">User name</DropdownItem>
-      <DropdownItem key="account">Account management</DropdownItem>
-      <DropdownItem key="logout">Log out</DropdownItem>
-    </>
-  );
-
   const masthead = (
     <Masthead>
       <MastheadMain>
         <MastheadBrand>
-          <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>🐦</span>
-          <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Project Hummingbird</span>
+          <span style={{ fontSize: '2rem', marginRight: '0.5rem' }}>🐦</span>
+          <span style={{ fontWeight: 'bold', fontSize: '1.25rem' }}>Project Hummingbird</span>
         </MastheadBrand>
       </MastheadMain>
-      <MastheadContent>
-        <Toolbar isFullHeight>
-          <ToolbarContent style={{ alignItems: 'center', display: 'flex', width: '100%' }}>
-            <ToolbarItem style={{ flex: '1 1 0', minWidth: 0 }} />
-            <ToolbarItem style={{ flex: '0 0 auto' }}>
-              <SearchInput
-                placeholder="🔍 Search Ecosystem Catalog"
-                value={searchValue}
-                onChange={(_, value) => setSearchValue(value)}
-                onClear={() => setSearchValue('')}
-                style={{ width: '600px' }}
-              />
-            </ToolbarItem>
-            <ToolbarItem style={{ flex: '1 1 0', minWidth: 0, display: 'flex', justifyContent: 'flex-end' }}>
-              <Dropdown
-                isOpen={isUserMenuOpen}
-                onSelect={() => setIsUserMenuOpen(false)}
-                onOpenChange={(isOpen) => setIsUserMenuOpen(isOpen)}
-                toggle={(toggleRef) => (
-                  <MenuToggle
-                    ref={toggleRef}
-                    variant="plain"
-                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    aria-label="User menu"
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <Avatar
-                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Ccircle cx='18' cy='18' r='18' fill='%23000000'/%3E%3C/svg%3E"
-                        alt="Kelsea"
-                      />
-                      <span>Kelsea</span>
-                    </div>
-                  </MenuToggle>
-                )}
-              >
-                <DropdownList>{userMenuItems}</DropdownList>
-              </Dropdown>
-            </ToolbarItem>
-          </ToolbarContent>
-        </Toolbar>
-      </MastheadContent>
     </Masthead>
-  );
-
-  const pageId = 'primary-app-container';
-
-  const PageSkipToContent = (
-    <SkipToContent
-      onClick={(event) => {
-        event.preventDefault();
-        const primaryContentContainer = document.getElementById(pageId);
-        primaryContentContainer?.focus();
-      }}
-      href={`#${pageId}`}
-    >
-      Skip to Content
-    </SkipToContent>
   );
 
   return (
     <MetadataProvider value={{ metadataToggles, setMetadataToggles }}>
       <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-        {isMetadataSidebarOpen && (
-          <MetadataSidebar
-            isOpen={isMetadataSidebarOpen}
-            onClose={() => setIsMetadataSidebarOpen(false)}
-            toggles={metadataToggles}
-            onToggleChange={handleToggleChange}
-            isDetailPage={isDetailPage}
-          />
-        )}
-        <div style={{ flex: 1, overflow: 'auto' }}>
-          <Page
-            mainContainerId={pageId}
-            masthead={masthead}
-            skipToContent={PageSkipToContent}
-          >
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          {masthead}
+          <div style={{ 
+            flex: 1, 
+            overflow: 'auto', 
+            padding: isMCPServersPage ? '0' : isDetailPage ? '0 1.5rem 1.5rem 1.5rem' : '1.5rem' 
+          }}>
             {children}
-          </Page>
+          </div>
         </div>
       </div>
     </MetadataProvider>
