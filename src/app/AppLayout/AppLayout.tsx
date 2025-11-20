@@ -73,7 +73,8 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
           <div style={{ 
             flex: 1, 
             overflow: 'auto', 
-            padding: isMCPServersPage ? '0' : isDetailPage ? '0 1.5rem 1.5rem 1.5rem' : '1.5rem' 
+            padding: isMCPServersPage ? '0' : isDetailPage ? '0 1.5rem 1.5rem 1.5rem' : '1.5rem',
+            scrollBehavior: 'smooth'
           }}>
             {children}
           </div>

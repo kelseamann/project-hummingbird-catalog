@@ -47,6 +47,7 @@ const DetailPage: React.FunctionComponent = () => {
   const [includeGoTools, setIncludeGoTools] = React.useState(false);
   const [aiPromptCopied, setAiPromptCopied] = React.useState(false);
   const [pageSearchValue, setPageSearchValue] = React.useState('');
+  const [activeSection, setActiveSection] = React.useState('');
 
   // Tag metadata (last published dates)
   const tagMetadata: Record<string, string> = {
@@ -124,6 +125,67 @@ const DetailPage: React.FunctionComponent = () => {
     }
   }, [pageSearchValue]);
 
+  // Track active section for jump links
+  React.useEffect(() => {
+    const sections = [
+      'start-using',
+      'migration',
+      'compatibility',
+      'license',
+      'architecture',
+      'containerfile',
+      'comparison',
+      'latest-update',
+      'tags',
+      'image-variants',
+      'cves',
+      'sbom',
+      'cosign',
+      'fips',
+      'stig',
+    ];
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -70% 0px',
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(`#${entry.target.id}`);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    sections.forEach((sectionId) => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        observer.observe(element);
+      }
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [metadataToggles.zeroCVEs, metadataToggles.sbom, metadataToggles.fipsChips]);
+
+  // Handle smooth scrolling for jump links
+  const handleJumpLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Update URL without jumping
+      window.history.pushState(null, '', href);
+      setActiveSection(href);
+    }
+  };
+
   // Mock data for CLICKME (in a real app, this would come from an API or state)
   const itemData = {
     provider: 'Red Hat',
@@ -142,9 +204,9 @@ const DetailPage: React.FunctionComponent = () => {
         </Breadcrumb>
         
         <div style={{ display: 'flex', gap: '2rem', overflow: 'visible' }}>
-          {/* Left column: Image info and navigation */}
+          {/* Left column: Image info */}
           <div style={{ 
-            width: '300px', 
+            width: '250px', 
             flexShrink: 0,
             position: 'sticky',
             top: '1rem',
@@ -255,30 +317,9 @@ const DetailPage: React.FunctionComponent = () => {
                 <Divider style={{ marginBottom: '1.5rem' }} />
               </>
             )}
-            
-            <div>
-              <div style={{ fontWeight: 'bold', fontSize: '0.875rem', marginBottom: '1rem' }}>Jump to section</div>
-              <JumpLinks isVertical>
-                <JumpLinksItem href="#start-using">Start using this image</JumpLinksItem>
-                <JumpLinksItem href="#migration">Migration steps</JumpLinksItem>
-                <JumpLinksItem href="#compatibility">Compatibility</JumpLinksItem>
-                <JumpLinksItem href="#license">License</JumpLinksItem>
-                <JumpLinksItem href="#architecture">Architecture</JumpLinksItem>
-                <JumpLinksItem href="#containerfile">Containerfile</JumpLinksItem>
-                <JumpLinksItem href="#comparison">Image Comparison</JumpLinksItem>
-                <JumpLinksItem href="#latest-update">Latest Update</JumpLinksItem>
-                <JumpLinksItem href="#tags">Tags</JumpLinksItem>
-                <JumpLinksItem href="#image-variants">Image Variants</JumpLinksItem>
-                {metadataToggles.zeroCVEs && <JumpLinksItem href="#cves">CVE Status</JumpLinksItem>}
-                {metadataToggles.sbom && <JumpLinksItem href="#sbom">SBOM</JumpLinksItem>}
-                <JumpLinksItem href="#cosign">Cosign</JumpLinksItem>
-                {metadataToggles.fipsChips && <JumpLinksItem href="#fips">FIPS</JumpLinksItem>}
-                <JumpLinksItem href="#stig">STIG</JumpLinksItem>
-              </JumpLinks>
-            </div>
           </div>
           
-          {/* Right column: Action cards */}
+          {/* Middle column: Action cards */}
           <div style={{ flex: 1, position: 'relative' }}>
             {/* Sticky search bar */}
             <div style={{ 
@@ -493,7 +534,7 @@ const DetailPage: React.FunctionComponent = () => {
 
                 <div style={{ marginBottom: '2rem' }}>
                   <div style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>Podman pull command</div>
-                  <div style={{ fontFamily: 'monospace' }}>
+                  <div style={{ fontFamily: 'monospace', width: '75%' }}>
                     <ClipboardCopy 
                       isReadOnly 
                       hoverTip="Copy" 
@@ -512,7 +553,7 @@ const DetailPage: React.FunctionComponent = () => {
 
                 <div>
                   <div style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>Docker pull command</div>
-                  <div style={{ fontFamily: 'monospace' }}>
+                  <div style={{ fontFamily: 'monospace', width: '75%' }}>
                     <ClipboardCopy 
                       isReadOnly 
                       hoverTip="Copy" 
@@ -564,7 +605,7 @@ const DetailPage: React.FunctionComponent = () => {
                 <div style={{ marginBottom: '1rem', paddingLeft: '1.5rem' }}>
                   <div style={{ marginBottom: '1.5rem' }}>
                     <strong>1. Update the FROM statement</strong>
-                    <div style={{ marginTop: '0.5rem' }}>
+                    <div style={{ marginTop: '0.5rem', width: '75%' }}>
                       <ClipboardCopy 
                         isReadOnly 
                         hoverTip="Copy" 
@@ -577,7 +618,7 @@ const DetailPage: React.FunctionComponent = () => {
 
                   <div style={{ marginBottom: '1.5rem' }}>
                     <strong>2. Change any apk package manager commands to dnf</strong>
-                    <div style={{ marginTop: '0.5rem' }}>
+                    <div style={{ marginTop: '0.5rem', width: '75%' }}>
                       <ClipboardCopy 
                         isReadOnly 
                         hoverTip="Copy" 
@@ -590,7 +631,7 @@ const DetailPage: React.FunctionComponent = () => {
 
                   <div style={{ marginBottom: '1.5rem' }}>
                     <strong>3. Set USER to 1001</strong>
-                    <div style={{ marginTop: '0.5rem' }}>
+                    <div style={{ marginTop: '0.5rem', width: '75%' }}>
                       <ClipboardCopy 
                         isReadOnly 
                         hoverTip="Copy" 
@@ -603,7 +644,7 @@ const DetailPage: React.FunctionComponent = () => {
 
                   <div style={{ marginBottom: '1.5rem' }}>
                     <strong>4. Add WORKDIR and set ownership</strong>
-                    <div style={{ marginTop: '0.5rem' }}>
+                    <div style={{ marginTop: '0.5rem', width: '75%' }}>
                       <ClipboardCopy 
                         isReadOnly 
                         hoverTip="Copy" 
@@ -616,7 +657,7 @@ const DetailPage: React.FunctionComponent = () => {
 
                   <div style={{ marginBottom: '1rem' }}>
                     <strong>5. Ensure cache directories are writable</strong>
-                    <div style={{ marginTop: '0.5rem' }}>
+                    <div style={{ marginTop: '0.5rem', width: '75%' }}>
                       <ClipboardCopy 
                         isReadOnly 
                         hoverTip="Copy" 
@@ -675,7 +716,7 @@ const DetailPage: React.FunctionComponent = () => {
             <Card>
               <CardHeader
                 actions={{
-                  actions: <Button variant="link" isInline>View Containerfile</Button>
+                  actions: <Button variant="secondary">View Containerfile</Button>
                 }}
               >
                 <CardTitle>Containerfile</CardTitle>
@@ -690,7 +731,7 @@ const DetailPage: React.FunctionComponent = () => {
             <Card>
               <CardHeader
                 actions={{
-                  actions: <Button variant="link" isInline>View on GitLab</Button>
+                  actions: <Button variant="secondary">View on GitLab</Button>
                 }}
               >
                 <CardTitle>Image Comparison Report</CardTitle>
@@ -810,7 +851,7 @@ const DetailPage: React.FunctionComponent = () => {
                 <CardHeader
                   actions={{
                     actions: (
-                      <Button variant="link" isInline>
+                      <Button variant="secondary">
                         <span className={metadataToggles.highlightsActive ? "highlighter" : ""}>View SBOM</span>
                       </Button>
                     )
@@ -838,9 +879,11 @@ const DetailPage: React.FunctionComponent = () => {
               </CardHeader>
               <CardBody>
                 <p style={{ marginBottom: '1rem' }}>Verify the image signature using Cosign:</p>
-                <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
-                  {`cosign verify quay.io/hummingbird/${imageName}:${imageTag}`}
-                </ClipboardCopy>
+                <div style={{ width: '75%' }}>
+                  <ClipboardCopy isReadOnly hoverTip="Copy" clickTip="Copied">
+                    {`cosign verify quay.io/hummingbird/${imageName}:${imageTag}`}
+                  </ClipboardCopy>
+                </div>
               </CardBody>
             </Card>
           </GridItem>
@@ -868,7 +911,7 @@ const DetailPage: React.FunctionComponent = () => {
             <Card>
               <CardHeader
                 actions={{
-                  actions: <Button variant="link" isInline>View STIG report</Button>
+                  actions: <Button variant="secondary">View STIG report</Button>
                 }}
               >
                 <CardTitle>STIG Compliance</CardTitle>
@@ -879,6 +922,41 @@ const DetailPage: React.FunctionComponent = () => {
             </Card>
           </GridItem>
         </Grid>
+          </div>
+          
+          {/* Right column: Jump links side panel */}
+          <div style={{ 
+            width: '250px', 
+            flexShrink: 0,
+            position: 'sticky',
+            top: '1rem',
+            alignSelf: 'flex-start',
+            height: 'fit-content'
+          }}>
+            <Card>
+              <CardHeader>
+                <CardTitle>Jump to section</CardTitle>
+              </CardHeader>
+              <CardBody>
+                <JumpLinks isVertical>
+                  <JumpLinksItem href="#start-using" isActive={activeSection === '#start-using'} onClick={(e) => handleJumpLinkClick(e, '#start-using')}>Start using this image</JumpLinksItem>
+                  <JumpLinksItem href="#migration" isActive={activeSection === '#migration'} onClick={(e) => handleJumpLinkClick(e, '#migration')}>Migration steps</JumpLinksItem>
+                  <JumpLinksItem href="#compatibility" isActive={activeSection === '#compatibility'} onClick={(e) => handleJumpLinkClick(e, '#compatibility')}>Compatibility</JumpLinksItem>
+                  <JumpLinksItem href="#license" isActive={activeSection === '#license'} onClick={(e) => handleJumpLinkClick(e, '#license')}>License</JumpLinksItem>
+                  <JumpLinksItem href="#architecture" isActive={activeSection === '#architecture'} onClick={(e) => handleJumpLinkClick(e, '#architecture')}>Architecture</JumpLinksItem>
+                  <JumpLinksItem href="#containerfile" isActive={activeSection === '#containerfile'} onClick={(e) => handleJumpLinkClick(e, '#containerfile')}>Containerfile</JumpLinksItem>
+                  <JumpLinksItem href="#comparison" isActive={activeSection === '#comparison'} onClick={(e) => handleJumpLinkClick(e, '#comparison')}>Image Comparison</JumpLinksItem>
+                  <JumpLinksItem href="#latest-update" isActive={activeSection === '#latest-update'} onClick={(e) => handleJumpLinkClick(e, '#latest-update')}>Latest Update</JumpLinksItem>
+                  <JumpLinksItem href="#tags" isActive={activeSection === '#tags'} onClick={(e) => handleJumpLinkClick(e, '#tags')}>Tags</JumpLinksItem>
+                  <JumpLinksItem href="#image-variants" isActive={activeSection === '#image-variants'} onClick={(e) => handleJumpLinkClick(e, '#image-variants')}>Image Variants</JumpLinksItem>
+                  {metadataToggles.zeroCVEs && <JumpLinksItem href="#cves" isActive={activeSection === '#cves'} onClick={(e) => handleJumpLinkClick(e, '#cves')}>CVE Status</JumpLinksItem>}
+                  {metadataToggles.sbom && <JumpLinksItem href="#sbom" isActive={activeSection === '#sbom'} onClick={(e) => handleJumpLinkClick(e, '#sbom')}>SBOM</JumpLinksItem>}
+                  <JumpLinksItem href="#cosign" isActive={activeSection === '#cosign'} onClick={(e) => handleJumpLinkClick(e, '#cosign')}>Cosign</JumpLinksItem>
+                  {metadataToggles.fipsChips && <JumpLinksItem href="#fips" isActive={activeSection === '#fips'} onClick={(e) => handleJumpLinkClick(e, '#fips')}>FIPS</JumpLinksItem>}
+                  <JumpLinksItem href="#stig" isActive={activeSection === '#stig'} onClick={(e) => handleJumpLinkClick(e, '#stig')}>STIG</JumpLinksItem>
+                </JumpLinks>
+              </CardBody>
+            </Card>
           </div>
         </div>
       </PageSection>
